@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isadora Carvalho | Arquitetura e Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@preline/preline@2.0.0/dist/preline.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fonte Primária: North Carossela -->
+    <link href="https://fonts.cdnfonts.com/css/north-carossela" rel="stylesheet">
+    <!-- Fonte Secundária: Rotato Sans -->
+    <link href="https://fonts.cdnfonts.com/css/rotato-sans" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    'display': ['"North Carossela"', 'serif'],
+                    'body': ['"Rotato Sans"', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        primary: '#cc8a7a',
+                        secondary: '#999b85',
+                        light: '#f4efec',
+                        dark: '#6e6b5c',
+                    }
+                }
+            }
+        }
+    </script>    
+    <style>
+        .arc-pattern {
+            background-color: #f4efec;
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='60' viewBox='0 0 120 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 60 Q60 0 120 60 T240 60' fill='none' stroke='%23cc8a7a' stroke-width='2' stroke-opacity='0.17'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 120px 60px;
+        }
+                
+        .transition-slow {
+            transition: all 0.5s ease;
+        }
+        .arc-decoration {
+            position: relative;
+        }
+        .arc-decoration::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #cc8a7a, transparent);
+        }
+
+        .portfolio-section {
+            background-color: #ffffff; /* base neutra */
+            color: #6e7c59; /* verde musgo para os textos */
+          }
+          
+          .portfolio-card {
+            background-color: #f4efec;
+            border: 1px solid #d9a066;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+          }
+          
+          .portfolio-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(217, 160, 102, 0.2);
+          }
+          
+          .portfolio-card h3 {
+            color: #3b4b5a;
+          }
+
+          .sobre-section {
+            background-color: #999b85ff; /* fundo em verde musgo */
+            border-left: 5px solid #ffb09c; /* barra decorativa */
+            padding: 3rem;
+          }
+          
+          .sobre-section h2 {
+            color: #6e6b5c;
+          }
+          
+          .sobre-section p {
+            color: #f4efec;
+            font-weight: 500;
+          }
+          .border-secundaria {
+            border-color: #cc8a7a;
+          }
+          .text-secundaria {
+            color: #6e6b5c;
+          }
+          
+    </style>
+</head>
+<body class="font-body text-dark bg-light">
+    <!-- Header/Navbar -->
+    <header class="fixed w-full bg-light bg-opacity-95 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <img src="SIMBOLOV.png" alt="Logo Isadora Carvalho" class="h-10">
+                    <span class="text-2xl font-display text-primary">Isadora</span>
+                    <span class="text-2xl font-display text-dark">Carvalho</span>
+                </div>
+                <!-- Menu Mobile -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-dark focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Menu Desktop -->
+                <nav class="hidden md:block">
+                    <ul class="flex space-x-8">
+                        <li><a href="#inicio" class="nav-link font-medium text-primary">Início</a></li>
+                        <li><a href="#sobre" class="nav-link hover:text-primary transition-slow">Sobre</a></li>
+                        <li><a href="#portfolio" class="nav-link hover:text-primary transition-slow">Portfólio</a></li>
+                        <li><a href="#contato" class="nav-link hover:text-primary transition-slow">Contato</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Menu Mobile Expandido -->
+        <div id="mobile-menu" class="hidden md:hidden bg-light py-4 px-6">
+            <ul class="space-y-4">
+                <li><a href="#inicio" class="block py-2 text-primary font-medium">Início</a></li>
+                <li><a href="#sobre" class="block py-2 hover:text-primary transition-slow">Sobre</a></li>
+                <li><a href="#portfolio" class="block py-2 hover:text-primary transition-slow">Portfólio</a></li>
+                <li><a href="#contato" class="block py-2 hover:text-primary transition-slow">Contato</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Seção Início -->
+    <section id="inicio" class="arc-pattern min-h-screen flex items-center pt-20">
+        <div class="container mx-auto px-6 py-20">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-12 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
+                        <span class="arc-decoration">Transformando espaços</span><br>
+                        <span class="text-primary">criando experiências</span>
+                    </h1>
+                    <p class="text-lg mb-8">
+                        Arquitetura que harmoniza forma e função, criando ambientes que contam histórias e inspiram o cotidiano.
+                    </p>
+                    <a href="#contato" class="bg-primary hover:bg-opacity-90 text-light px-8 py-3 rounded-sm font-medium transition-slow inline-block">
+                        Inicie seu projeto
+                    </a>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="relative w-full max-w-md">
+                        <div class="absolute -inset-4 bg-primary bg-opacity-10 rounded-sm"></div>
+                        <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Projeto arquitetônico" 
+                             class="relative w-full h-auto object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Sobre -->
+    <section id="sobre" class="sobre-section py-20">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/3 mb-10 md:mb-0 flex justify-center">
+                    <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-2 border-secundaria">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80" 
+                             alt="Isadora Carvalho" 
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+                
+                <div class="md:w-2/3 md:pl-12">
+                    <h3 class="text-2xl font-display font-semibold mb-4 text-secundaria">Arquiteta e Urbanista</h3>
+                    <p class="text-lg mb-6">
+                        Formada pela Universidade de São Paulo com especialização em Design de Interiores, Isadora Carvalho traz uma abordagem única que combina precisão técnica com sensibilidade artística.
+                    </p>
+                    <p class="text-lg mb-6">
+                        Seu trabalho é reconhecido pela integração harmoniosa entre espaços internos e externos, sempre com atenção aos detalhes que transformam projetos em experiências memoráveis.
+                    </p>
+                    <p class="text-lg">
+                        "Acredito que a arquitetura deve ser uma extensão da personalidade de quem habita, criando não apenas espaços, mas ambientes que elevam a qualidade de vida."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Portfólio -->
+    <section id="portfolio" class="portfolio-section py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-16">Portfólio</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Projeto 1 -->
+                <div class="group relative overflow-hidden">
+                    <div class="h-80 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
+                             alt="Residência Alameda" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-slow">
+                    </div>
+                    <div class="absolute inset-0 bg-primary bg-opacity-0 group-hover:bg-opacity-20 transition-slow flex items-center justify-center">
+                        <h3 class="text-white opacity-0 group-hover:opacity-100 text-xl font-display transition-slow">Residência Alameda</h3>
+                    </div>
+                </div>
+                
+                <!-- Projeto 2 -->
+                <div class="group relative overflow-hidden">
+                    <div class="h-80 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1600566752227-8f61e5752158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Escritório Vertical" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-slow">
+                    </div>
+                    <div class="absolute inset-0 bg-primary bg-opacity-0 group-hover:bg-opacity-20 transition-slow flex items-center justify-center">
+                        <h3 class="text-white opacity-0 group-hover:opacity-100 text-xl font-display transition-slow">Escritório Vertical</h3>
+                    </div>
+                </div>
+                
+                <!-- Projeto 3 -->
+                <div class="group relative overflow-hidden">
+                    <div class="h-80 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                             alt="Café Moderno" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-slow">
+                    </div>
+                    <div class="absolute inset-0 bg-primary bg-opacity-0 group-hover:bg-opacity-20 transition-slow flex items-center justify-center">
+                        <h3 class="text-white opacity-0 group-hover:opacity-100 text-xl font-display transition-slow">Café Moderno</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block border border-primary text-primary hover:bg-primary hover:text-light px-8 py-3 rounded-sm font-medium transition-slow">
+                    Explorar projetos completos
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer/Contato -->
+    <footer id="contato" class="bg-dark text-light py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start">
+                <div class="mb-8 md:mb-0">
+                    <h3 class="text-2xl font-display font-bold mb-4">Isadora Carvalho</h3>
+                    <p class="text-secondary">Transformando espaços e criando experiências</p>
+                </div>
+                
+                <div class="mb-8 md:mb-0">
+                    <h4 class="text-xl font-display font-semibold mb-4">Contato</h4>
+                    <div class="flex flex-col space-y-2">
+                        <a href="mailto:contato@isadoracarvalho.com" class="text-secondary hover:text-light transition-slow">
+                            <i class="fas fa-envelope mr-2"></i> contato@isadoracarvalho.com
+                        </a>
+                        <a href="https://instagram.com/isadoracarvalho.arq" target="_blank" class="text-secondary hover:text-light transition-slow">
+                            <i class="fab fa-instagram mr-2"></i> @isadoracarvalho.arq
+                        </a>
+                        <a href="tel:+5511999999999" class="text-secondary hover:text-light transition-slow">
+                            <i class="fas fa-phone mr-2"></i> +55 11 99999-9999
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-xl font-display font-semibold mb-4">Atendimento</h4>
+                    <p class="text-secondary">Segunda a Sexta: 9h às 18h</p>
+                    <p class="text-secondary">Sábado: 10h às 14h</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-secondary border-opacity-20 mt-12 pt-8 text-center text-secondary">
+                <p>&copy; 2023 Isadora Carvalho Arquitetura. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Menu mobile
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Suavizar scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Fechar menu mobile se estiver aberto
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+        
+        // Destacar link ativo no menu
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        window.addEventListener('scroll', () => {
+            let fromTop = window.scrollY + 100;
+            
+            navLinks.forEach(link => {
+                const section = document.querySelector(link.getAttribute('href'));
+                
+                if (
+                    section.offsetTop <= fromTop &&
+                    section.offsetTop + section.offsetHeight > fromTop
+                ) {
+                    link.classList.add('text-primary', 'font-medium');
+                    link.classList.remove('hover:text-primary');
+                } else {
+                    link.classList.remove('text-primary', 'font-medium');
+                    link.classList.add('hover:text-primary');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
