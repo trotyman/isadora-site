@@ -28,7 +28,7 @@
                 }
             }
         }
-    </script>    
+    </script>
     <style>
         /* FUNDO ANIMADO - ARCOS ONDULANTES */
         .arc-pattern {
@@ -43,7 +43,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 0;
             pointer-events: none;
         }
         
@@ -56,6 +56,7 @@
             background-repeat: repeat-x;
             background-size: 120px 60px;
             animation: waveAnimation 25s linear infinite;
+            will-change: transform;
         }
         
         .arc-wave-1 {
@@ -265,10 +266,10 @@
     <!-- Seção Início com Arcos Animados -->
     <section id="inicio" class="arc-pattern min-h-screen flex items-center pt-20">
         <!-- Arcos animados no fundo -->
-        <div class="arc-container">
-            <div class="arc-wave arc-wave-1"></div>
-            <div class="arc-wave arc-wave-2"></div>
-            <div class="arc-wave arc-wave-3"></div>
+        <div class="arc-container" id="arcContainer">
+            <div class="arc-wave arc-wave-1" id="arcWave1"></div>
+            <div class="arc-wave arc-wave-2" id="arcWave2"></div>
+            <div class="arc-wave arc-wave-3" id="arcWave3"></div>
         </div>
         
         <div class="container mx-auto px-6 py-20 relative z-10">
@@ -482,26 +483,80 @@
         window.addEventListener('load', animateOnScroll);
         window.addEventListener('scroll', animateOnScroll);
 
-        // Efeito de interação com os arcos
-        const arcContainer = document.querySelector('.arc-container');
-        const arcWaves = document.querySelectorAll('.arc-wave');
+        // Aleatorizar direções das animações
+        document.querySelectorAll('[data-animate]').forEach(el => {
+            const animations = ['fadeIn', 'fadeInLeft', 'fadeInRight', 'fadeInDown', 'fadeInUp', 'zoomIn', 'rotateIn'];
+            const randomAnim = animations[Math.floor(Math.random() * animations.length)];
+            el.setAttribute('data-animate', randomAnim);
+        });
+
+        // INTERAÇÃO DOS ARCOS COM O MOUSE (EFEITO DOMINÓ)
+        const arcContainer = document.getElementById('arcContainer');
+        const arcWave1 = document.getElementById('arcWave1');
+        const arcWave2 = document.getElementById('arcWave2');
+        const arcWave3 = document.getElementById('arcWave3');
         
-        if (arcContainer) {
-            document.addEventListener('mousemove', (e) => {
-                const x = e.clientX / window.innerWidth;
-                const y = e.clientY / window.innerHeight;
-                
-                // Efeito dominó - cada onda reage com delay diferente
-                arcWaves.forEach((wave, index) => {
-                    const delay = index * 0.2;
-                    setTimeout(() => {
-                        const moveX = (x - 0.5) * 30 * (index + 1);
-                        const moveY = (y - 0.5) * 15 * (index + 1);
-                        wave.style.transform = `translateX(${moveX}px) translateY(${moveY}px)`;
-                    }, delay * 1000);
-                });
-            });
+        let mouseX = 0;
+        let mouseY = 0;
+        let rafId = null;
+        
+        // Configuração do efeito
+        const waveConfig = {
+            sensitivity: 0.5,
+            wave1: { delay: 0, intensity: 1 },
+            wave2: { delay: 100, intensity: 0.7 },
+            wave3: { delay: 200, intensity: 0.5 }
+        };
+        
+        // Acompanhar posição do mouse
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            
+            if (!rafId) {
+                updateWavePosition();
+            }
+        });
+        
+        // Animação suave com requestAnimationFrame
+        function updateWavePosition() {
+            // Efeito dominó com delays diferentes
+            const wave1X = mouseX * 40 * waveConfig.wave1.intensity;
+            const wave1Y = mouseY * 20 * waveConfig.wave1.intensity;
+            
+            const wave2X = mouseX * 40 * waveConfig.wave2.intensity;
+            const wave2Y = mouseY * 20 * waveConfig.wave2.intensity;
+            
+            const wave3X = mouseX * 40 * waveConfig.wave3.intensity;
+            const wave3Y = mouseY * 20 * waveConfig.wave3.intensity;
+            
+            // Aplicar transformações com delays diferentes
+            setTimeout(() => {
+                arcWave1.style.transform = `translateX(${wave1X}px) translateY(${wave1Y}px)`;
+            }, waveConfig.wave1.delay);
+            
+            setTimeout(() => {
+                arcWave2.style.transform = `translateX(${wave2X}px) translateY(${wave2Y}px)`;
+            }, waveConfig.wave2.delay);
+            
+            setTimeout(() => {
+                arcWave3.style.transform = `translateX(${wave3X}px) translateY(${wave3Y}px)`;
+            }, waveConfig.wave3.delay);
+            
+            rafId = requestAnimationFrame(updateWavePosition);
         }
+        
+        // Resetar quando o mouse sai
+        document.addEventListener('mouseleave', () => {
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+                
+                arcWave1.style.transform = 'translateX(0) translateY(0)';
+                arcWave2.style.transform = 'translateX(0) translateY(0)';
+                arcWave3.style.transform = 'translateX(0) translateY(0)';
+            }
+        });
     </script>
 </body>
 </html>
