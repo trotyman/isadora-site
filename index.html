@@ -30,19 +30,67 @@
         }
     </script>    
     <style>
+        /* FUNDO ANIMADO - ARCOS ONDULANTES */
         .arc-pattern {
             background-color: #f4efec;
-            background-image: url("data:image/svg+xml,%3Csvg width='120' height='60' viewBox='0 0 120 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 60 Q60 0 120 60 T240 60' fill='none' stroke='%23cc8a7a' stroke-width='2' stroke-opacity='0.17'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 120px 60px;
+            position: relative;
+            overflow: hidden;
         }
-                
+        
+        .arc-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .arc-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 150px;
+            background-repeat: repeat-x;
+            background-size: 120px 60px;
+            animation: waveAnimation 25s linear infinite;
+        }
+        
+        .arc-wave-1 {
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='60' viewBox='0 0 120 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 60 Q60 0 120 60 T240 60' fill='none' stroke='%23cc8a7a' stroke-width='2'/%3E%3C/svg%3E");
+            opacity: 0.3;
+            bottom: 0;
+        }
+        
+        .arc-wave-2 {
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='60' viewBox='0 0 120 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 60 Q60 10 120 60 T240 60' fill='none' stroke='%23cc8a7a' stroke-width='2'/%3E%3C/svg%3E");
+            opacity: 0.2;
+            bottom: 20px;
+            animation-delay: -5s;
+        }
+        
+        .arc-wave-3 {
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='60' viewBox='0 0 120 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 60 Q60 20 120 60 T240 60' fill='none' stroke='%23cc8a7a' stroke-width='2'/%3E%3C/svg%3E");
+            opacity: 0.1;
+            bottom: 40px;
+            animation-delay: -10s;
+        }
+        
+        @keyframes waveAnimation {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         .transition-slow {
             transition: all 0.5s ease;
         }
+        
         .arc-decoration {
             position: relative;
         }
+        
         .arc-decoration::after {
             content: '';
             position: absolute;
@@ -54,47 +102,123 @@
         }
 
         .portfolio-section {
-            background-color: #ffffff; /* base neutra */
-            color: #6e7c59; /* verde musgo para os textos */
-          }
+            background-color: #ffffff;
+            color: #6e7c59;
+        }
           
-          .portfolio-card {
+        .portfolio-card {
             background-color: #f4efec;
             border: 1px solid #d9a066;
             border-radius: 12px;
             transition: transform 0.3s ease;
-          }
+        }
           
-          .portfolio-card:hover {
+        .portfolio-card:hover {
             transform: scale(1.02);
             box-shadow: 0 8px 20px rgba(217, 160, 102, 0.2);
-          }
+        }
           
-          .portfolio-card h3 {
+        .portfolio-card h3 {
             color: #3b4b5a;
-          }
+        }
 
-          .sobre-section {
-            background-color: #999b85ff; /* fundo em verde musgo */
-            border-left: 5px solid #ffb09c; /* barra decorativa */
+        .sobre-section {
+            background-color: #999b85ff;
+            border-left: 5px solid #ffb09c;
             padding: 3rem;
-          }
+        }
           
-          .sobre-section h2 {
+        .sobre-section h2 {
             color: #6e6b5c;
-          }
+        }
           
-          .sobre-section p {
+        .sobre-section p {
             color: #f4efec;
             font-weight: 500;
-          }
-          .border-secundaria {
+        }
+        
+        .border-secundaria {
             border-color: #cc8a7a;
-          }
-          .text-secundaria {
+        }
+        
+        .text-secundaria {
             color: #6e6b5c;
-          }
-          
+        }
+
+        /* ANIMAÇÕES DE ENTRADA */
+        [data-animate] {
+            opacity: 0;
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        [data-animate="fadeIn"] {
+            transform: translateY(30px);
+        }
+
+        [data-animate="fadeInLeft"] {
+            transform: translateX(-50px);
+        }
+
+        [data-animate="fadeInRight"] {
+            transform: translateX(50px);
+        }
+
+        [data-animate="fadeInDown"] {
+            transform: translateY(50px);
+        }
+
+        [data-animate="fadeInUp"] {
+            transform: translateY(-50px);
+        }
+
+        [data-animate="zoomIn"] {
+            transform: scale(0.9);
+        }
+
+        [data-animate="rotateIn"] {
+            transform: rotate(-10deg) scale(0.8);
+        }
+
+        [data-animate].animated {
+            opacity: 1;
+            transform: translate(0) scale(1) rotate(0);
+        }
+
+        .hover-3d {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hover-3d:hover {
+            transform: translateY(-8px) rotateX(5deg);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .img-scale {
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .img-scale:hover {
+            transform: scale(1.05);
+        }
+
+        .link-underline {
+            position: relative;
+        }
+
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: currentColor;
+            transition: width 0.4s ease;
+        }
+
+        .link-underline:hover::after {
+            width: 100%;
+        }
     </style>
 </head>
 <body class="font-body text-dark bg-light">
@@ -118,10 +242,10 @@
                 <!-- Menu Desktop -->
                 <nav class="hidden md:block">
                     <ul class="flex space-x-8">
-                        <li><a href="#inicio" class="nav-link font-medium text-primary">Início</a></li>
-                        <li><a href="#sobre" class="nav-link hover:text-primary transition-slow">Sobre</a></li>
-                        <li><a href="#portfolio" class="nav-link hover:text-primary transition-slow">Portfólio</a></li>
-                        <li><a href="#contato" class="nav-link hover:text-primary transition-slow">Contato</a></li>
+                        <li><a href="#inicio" class="nav-link font-medium text-primary link-underline">Início</a></li>
+                        <li><a href="#sobre" class="nav-link hover:text-primary transition-slow link-underline">Sobre</a></li>
+                        <li><a href="#portfolio" class="nav-link hover:text-primary transition-slow link-underline">Portfólio</a></li>
+                        <li><a href="#contato" class="nav-link hover:text-primary transition-slow link-underline">Contato</a></li>
                     </ul>
                 </nav>
             </div>
@@ -130,19 +254,26 @@
         <!-- Menu Mobile Expandido -->
         <div id="mobile-menu" class="hidden md:hidden bg-light py-4 px-6">
             <ul class="space-y-4">
-                <li><a href="#inicio" class="block py-2 text-primary font-medium">Início</a></li>
-                <li><a href="#sobre" class="block py-2 hover:text-primary transition-slow">Sobre</a></li>
-                <li><a href="#portfolio" class="block py-2 hover:text-primary transition-slow">Portfólio</a></li>
-                <li><a href="#contato" class="block py-2 hover:text-primary transition-slow">Contato</a></li>
+                <li><a href="#inicio" class="block py-2 text-primary font-medium link-underline">Início</a></li>
+                <li><a href="#sobre" class="block py-2 hover:text-primary transition-slow link-underline">Sobre</a></li>
+                <li><a href="#portfolio" class="block py-2 hover:text-primary transition-slow link-underline">Portfólio</a></li>
+                <li><a href="#contato" class="block py-2 hover:text-primary transition-slow link-underline">Contato</a></li>
             </ul>
         </div>
     </header>
 
-    <!-- Seção Início -->
+    <!-- Seção Início com Arcos Animados -->
     <section id="inicio" class="arc-pattern min-h-screen flex items-center pt-20">
-        <div class="container mx-auto px-6 py-20">
+        <!-- Arcos animados no fundo -->
+        <div class="arc-container">
+            <div class="arc-wave arc-wave-1"></div>
+            <div class="arc-wave arc-wave-2"></div>
+            <div class="arc-wave arc-wave-3"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 py-20 relative z-10">
             <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 mb-12 md:mb-0">
+                <div class="md:w-1/2 mb-12 md:mb-0" data-animate="fadeInRight">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
                         <span class="arc-decoration">Transformando espaços</span><br>
                         <span class="text-primary">criando experiências</span>
@@ -150,16 +281,16 @@
                     <p class="text-lg mb-8">
                         Arquitetura que harmoniza forma e função, criando ambientes que contam histórias e inspiram o cotidiano.
                     </p>
-                    <a href="#contato" class="bg-primary hover:bg-opacity-90 text-light px-8 py-3 rounded-sm font-medium transition-slow inline-block">
+                    <a href="#contato" class="bg-primary hover:bg-opacity-90 text-light px-8 py-3 rounded-sm font-medium transition-slow inline-block hover-3d" data-animate="zoomIn">
                         Inicie seu projeto
                     </a>
                 </div>
-                <div class="md:w-1/2 flex justify-center">
+                <div class="md:w-1/2 flex justify-center" data-animate="fadeInLeft">
                     <div class="relative w-full max-w-md">
                         <div class="absolute -inset-4 bg-primary bg-opacity-10 rounded-sm"></div>
                         <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
                              alt="Projeto arquitetônico" 
-                             class="relative w-full h-auto object-cover">
+                             class="relative w-full h-auto object-cover img-scale">
                     </div>
                 </div>
             </div>
@@ -170,23 +301,23 @@
     <section id="sobre" class="sobre-section py-20">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/3 mb-10 md:mb-0 flex justify-center">
-                    <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-2 border-secundaria">
+                <div class="md:w-1/3 mb-10 md:mb-0 flex justify-center" data-animate="fadeInLeft">
+                    <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-2 border-secundaria hover-3d">
                         <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=688&q=80" 
                              alt="Isadora Carvalho" 
-                             class="w-full h-full object-cover">
+                             class="w-full h-full object-cover img-scale">
                     </div>
                 </div>
                 
                 <div class="md:w-2/3 md:pl-12">
-                    <h3 class="text-2xl font-display font-semibold mb-4 text-secundaria">Arquiteta e Urbanista</h3>
-                    <p class="text-lg mb-6">
+                    <h3 class="text-2xl font-display font-semibold mb-4 text-secundaria" data-animate="fadeInDown">Arquiteta e Urbanista</h3>
+                    <p class="text-lg mb-6" data-animate="fadeInRight" style="transition-delay: 0.2s;">
                         Formada pela Universidade de São Paulo com especialização em Design de Interiores, Isadora Carvalho traz uma abordagem única que combina precisão técnica com sensibilidade artística.
                     </p>
-                    <p class="text-lg mb-6">
+                    <p class="text-lg mb-6" data-animate="fadeInLeft" style="transition-delay: 0.4s;">
                         Seu trabalho é reconhecido pela integração harmoniosa entre espaços internos e externos, sempre com atenção aos detalhes que transformam projetos em experiências memoráveis.
                     </p>
-                    <p class="text-lg">
+                    <p class="text-lg" data-animate="fadeInUp" style="transition-delay: 0.6s;">
                         "Acredito que a arquitetura deve ser uma extensão da personalidade de quem habita, criando não apenas espaços, mas ambientes que elevam a qualidade de vida."
                     </p>
                 </div>
@@ -197,11 +328,11 @@
     <!-- Seção Portfólio -->
     <section id="portfolio" class="portfolio-section py-20">
         <div class="container mx-auto px-6">
-            <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-16">Portfólio</h2>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-16" data-animate="zoomIn">Portfólio</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Projeto 1 -->
-                <div class="group relative overflow-hidden">
+                <div class="group relative overflow-hidden hover-3d" data-animate="fadeInLeft">
                     <div class="h-80 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
                              alt="Residência Alameda" 
@@ -213,7 +344,7 @@
                 </div>
                 
                 <!-- Projeto 2 -->
-                <div class="group relative overflow-hidden">
+                <div class="group relative overflow-hidden hover-3d" data-animate="fadeInUp" style="transition-delay: 0.2s;">
                     <div class="h-80 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1600566752227-8f61e5752158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
                              alt="Escritório Vertical" 
@@ -225,7 +356,7 @@
                 </div>
                 
                 <!-- Projeto 3 -->
-                <div class="group relative overflow-hidden">
+                <div class="group relative overflow-hidden hover-3d" data-animate="fadeInRight" style="transition-delay: 0.4s;">
                     <div class="h-80 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
                              alt="Café Moderno" 
@@ -237,8 +368,8 @@
                 </div>
             </div>
             
-            <div class="text-center mt-12">
-                <a href="#" class="inline-block border border-primary text-primary hover:bg-primary hover:text-light px-8 py-3 rounded-sm font-medium transition-slow">
+            <div class="text-center mt-12" data-animate="fadeIn" style="transition-delay: 0.6s;">
+                <a href="#" class="inline-block border border-primary text-primary hover:bg-primary hover:text-light px-8 py-3 rounded-sm font-medium transition-slow hover-3d">
                     Explorar projetos completos
                 </a>
             </div>
@@ -249,34 +380,34 @@
     <footer id="contato" class="bg-dark text-light py-12">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-start">
-                <div class="mb-8 md:mb-0">
+                <div class="mb-8 md:mb-0" data-animate="fadeInLeft">
                     <h3 class="text-2xl font-display font-bold mb-4">Isadora Carvalho</h3>
                     <p class="text-secondary">Transformando espaços e criando experiências</p>
                 </div>
                 
-                <div class="mb-8 md:mb-0">
+                <div class="mb-8 md:mb-0" data-animate="fadeInUp" style="transition-delay: 0.2s;">
                     <h4 class="text-xl font-display font-semibold mb-4">Contato</h4>
                     <div class="flex flex-col space-y-2">
-                        <a href="mailto:contato@isadoracarvalho.com" class="text-secondary hover:text-light transition-slow">
+                        <a href="mailto:contato@isadoracarvalho.com" class="text-secondary hover:text-light transition-slow link-underline">
                             <i class="fas fa-envelope mr-2"></i> contato@isadoracarvalho.com
                         </a>
-                        <a href="https://instagram.com/isadoracarvalho.arq" target="_blank" class="text-secondary hover:text-light transition-slow">
+                        <a href="https://instagram.com/isadoracarvalho.arq" target="_blank" class="text-secondary hover:text-light transition-slow link-underline">
                             <i class="fab fa-instagram mr-2"></i> @isadoracarvalho.arq
                         </a>
-                        <a href="tel:+5511999999999" class="text-secondary hover:text-light transition-slow">
+                        <a href="tel:+5511999999999" class="text-secondary hover:text-light transition-slow link-underline">
                             <i class="fas fa-phone mr-2"></i> +55 11 99999-9999
                         </a>
                     </div>
                 </div>
                 
-                <div>
+                <div data-animate="fadeInRight" style="transition-delay: 0.4s;">
                     <h4 class="text-xl font-display font-semibold mb-4">Atendimento</h4>
                     <p class="text-secondary">Segunda a Sexta: 9h às 18h</p>
                     <p class="text-secondary">Sábado: 10h às 14h</p>
                 </div>
             </div>
             
-            <div class="border-t border-secondary border-opacity-20 mt-12 pt-8 text-center text-secondary">
+            <div class="border-t border-secondary border-opacity-20 mt-12 pt-8 text-center text-secondary" data-animate="fadeIn">
                 <p>&copy; 2023 Isadora Carvalho Arquitetura. Todos os direitos reservados.</p>
             </div>
         </div>
@@ -334,6 +465,43 @@
                 }
             });
         });
+
+        // ANIMAÇÕES - Observador de elementos na tela
+        const animateOnScroll = () => {
+            document.querySelectorAll('[data-animate]').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const isVisible = (rect.top <= window.innerHeight * 0.85);
+                
+                if (isVisible) {
+                    el.classList.add('animated');
+                }
+            });
+        };
+
+        // Ativa na carga e no scroll
+        window.addEventListener('load', animateOnScroll);
+        window.addEventListener('scroll', animateOnScroll);
+
+        // Efeito de interação com os arcos
+        const arcContainer = document.querySelector('.arc-container');
+        const arcWaves = document.querySelectorAll('.arc-wave');
+        
+        if (arcContainer) {
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                
+                // Efeito dominó - cada onda reage com delay diferente
+                arcWaves.forEach((wave, index) => {
+                    const delay = index * 0.2;
+                    setTimeout(() => {
+                        const moveX = (x - 0.5) * 30 * (index + 1);
+                        const moveY = (y - 0.5) * 15 * (index + 1);
+                        wave.style.transform = `translateX(${moveX}px) translateY(${moveY}px)`;
+                    }, delay * 1000);
+                });
+            });
+        }
     </script>
 </body>
 </html>
