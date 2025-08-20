@@ -130,19 +130,19 @@
 
                                 // Projeto em linha, sem card de fundo
                                 const linha = document.createElement('div');
-                                linha.className = 'flex flex-col md:flex-row items-center gap-8 w-full cursor-pointer group';
+                                linha.className = 'flex flex-col md:flex-row items-center md:gap-8 gap-4 w-full cursor-pointer group px-0 md:px-2';
                                 linha.setAttribute('data-animate', 'fadeInUp');
                                 linha.tabIndex = 0;
                                 linha.setAttribute('role', 'button');
                                 linha.setAttribute('aria-label', proj.name);
                                 linha.innerHTML = `
-                                    <div class="w-full md:w-1/3 h-48 md:h-56 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                                    <div class="w-full md:w-1/3 h-44 md:h-56 flex-shrink-0 overflow-hidden flex items-center justify-center mb-2 md:mb-0">
                                         <img src="${proj.images[0] || ''}" alt="${proj.name}" class="w-full h-full object-cover transition-slow group-hover:scale-105 rounded-lg" onerror="this.style.display='none'">
                                     </div>
                                     <div class="flex-1 flex flex-col justify-center items-start md:pl-8 w-full">
-                                        <h3 class="text-2xl font-display font-bold mb-2 text-primary">${proj.name.replace(/_/g, ' ')}</h3>
-                                        <p class="text-dark text-base mb-2">${descProjeto}</p>
-                                        <span class="text-sm text-secondary">Clique para ver as fotos do projeto</span>
+                                        <h3 class="text-xl md:text-2xl font-display font-bold mb-1 md:mb-2 text-primary">${proj.name.replace(/_/g, ' ')}</h3>
+                                        <p class="text-dark text-sm md:text-base mb-1 md:mb-2">${descProjeto}</p>
+                                        <span class="text-xs md:text-sm text-secondary">Clique para ver as fotos do projeto</span>
                                     </div>
                                 `;
                                 linha.addEventListener('click', () => openProjetoModal(proj, imgDescs, descProjeto));
