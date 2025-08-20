@@ -81,13 +81,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
         // Se chegou ao final da página, destaca o link Contato
-        if (!found && window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === '#contato') {
-                    link.classList.add('text-primary', 'font-medium');
-                    link.classList.remove('hover:text-primary');
-                }
-            });
+        const footer = document.getElementById('contato');
+        const buffer = 40; // margem para garantir que o rodapé está visível
+        if (!found && footer) {
+            const footerRect = footer.getBoundingClientRect();
+            if (footerRect.top < window.innerHeight - buffer) {
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === '#contato') {
+                        link.classList.add('text-primary', 'font-medium');
+                        link.classList.remove('hover:text-primary');
+                    }
+                });
+            }
         }
     });
 
