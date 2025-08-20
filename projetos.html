@@ -78,7 +78,6 @@
         <div class="container mx-auto px-6">
             <h1 class="text-4xl md:text-5xl font-display font-bold text-center mb-10 text-primary">Projetos Completos</h1>
             <p class="text-lg text-center mb-12 max-w-2xl mx-auto text-dark">Aqui você encontra a lista completa de projetos desenvolvidos por Isadora Carvalho Arquitetura. Explore cada projeto para conhecer detalhes, imagens e inspirações. Esta página é um exemplo de layout secundário para testes de design, cores e navegação.</p>
-            <div id="projetos-lista" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             <div id="projetos-lista" class="flex flex-col gap-10"></div>
         </div>
     </main>
@@ -126,25 +125,25 @@
                         const descProjeto = `Projeto ${proj.name.replace(/_/g, ' ')}: este é um exemplo de descrição breve do projeto, destacando diferenciais, conceito e resultados.`;
                         const imgDescs = proj.images.map((img, i) => `Imagem ${i+1} do projeto ${proj.name.replace(/_/g, ' ')}: descrição genérica da imagem para testes de layout e navegação.`);
 
-                        // Card do projeto
-                        const card = document.createElement('div');
-                        card.className = 'flex flex-col md:flex-row items-center gap-6 bg-white rounded-lg shadow-md p-6 hover-3d cursor-pointer portfolio-card group';
-                        card.setAttribute('data-animate', 'fadeInUp');
-                        card.tabIndex = 0;
-                        card.setAttribute('role', 'button');
-                        card.setAttribute('aria-label', proj.name);
-                        card.innerHTML = `
-                            <div class="w-full md:w-64 h-48 md:h-40 flex-shrink-0 overflow-hidden rounded-lg bg-light flex items-center justify-center">
-                                <img src="${proj.images[0] || ''}" alt="${proj.name}" class="w-full h-full object-cover transition-slow group-hover:scale-105" onerror="this.style.display='none'">
+                        // Projeto em linha, sem card de fundo
+                        const linha = document.createElement('div');
+                        linha.className = 'flex flex-col md:flex-row items-center gap-8 w-full cursor-pointer group';
+                        linha.setAttribute('data-animate', 'fadeInUp');
+                        linha.tabIndex = 0;
+                        linha.setAttribute('role', 'button');
+                        linha.setAttribute('aria-label', proj.name);
+                        linha.innerHTML = `
+                            <div class="w-full md:w-1/3 h-48 md:h-56 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                                <img src="${proj.images[0] || ''}" alt="${proj.name}" class="w-full h-full object-cover transition-slow group-hover:scale-105 rounded-lg" onerror="this.style.display='none'">
                             </div>
-                            <div class="flex-1 flex flex-col justify-center items-start md:pl-6">
+                            <div class="flex-1 flex flex-col justify-center items-start md:pl-8 w-full">
                                 <h3 class="text-2xl font-display font-bold mb-2 text-primary">${proj.name.replace(/_/g, ' ')}</h3>
                                 <p class="text-dark text-base mb-2">${descProjeto}</p>
                                 <span class="text-sm text-secondary">Clique para ver as fotos do projeto</span>
                             </div>
                         `;
-                        card.addEventListener('click', () => openProjetoModal(proj, imgDescs, descProjeto));
-                        container.appendChild(card);
+                        linha.addEventListener('click', () => openProjetoModal(proj, imgDescs, descProjeto));
+                        container.appendChild(linha);
                     });
 
                     // Animações de entrada
@@ -222,4 +221,10 @@
     });
     </script>
 </body>
-</html>
+    <style>
+        body { background-color: #f4efec; }
+        .transition-slow { transition: all 0.5s ease; }
+        .link-underline { position: relative; }
+        .link-underline::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background-color: currentColor; transition: width 0.4s ease; }
+        .link-underline:hover::after { width: 100%; }
+    </style>
