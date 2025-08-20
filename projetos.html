@@ -93,13 +93,19 @@
         <div class="w-full h-full flex flex-col items-center justify-center relative">
             <h2 id="modal-projeto-title" class="text-2xl md:text-3xl font-display font-bold mb-4 text-primary text-center drop-shadow-lg"></h2>
             <div class="w-full flex items-center justify-center relative" style="height:70vh;">
-                <button id="modal-prev-img" class="absolute left-0 top-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 md:p-4 text-3xl md:text-5xl shadow-lg z-40 transition-slow flex items-center justify-center" aria-label="Anterior">
+                <div id="modal-projeto-galeria" class="flex flex-col items-center justify-center w-full h-full"></div>
+                <!-- Setas laterais só em telas md+ -->
+                <button id="modal-prev-img" class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 md:p-4 text-3xl md:text-5xl shadow-lg z-40 transition-slow items-center justify-center" aria-label="Anterior">
                     &#8592;
                 </button>
-                <div id="modal-projeto-galeria" class="flex flex-col items-center justify-center w-full h-full"></div>
-                <button id="modal-next-img" class="absolute right-0 top-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 md:p-4 text-3xl md:text-5xl shadow-lg z-40 transition-slow flex items-center justify-center" aria-label="Próxima">
+                <button id="modal-next-img" class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 md:p-4 text-3xl md:text-5xl shadow-lg z-40 transition-slow items-center justify-center" aria-label="Próxima">
                     &#8594;
                 </button>
+            </div>
+            <!-- Setas embaixo da imagem no mobile -->
+            <div class="flex md:hidden justify-center gap-8 mt-4">
+                <button id="modal-prev-img-mobile" class="bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 text-3xl shadow-lg transition-slow" aria-label="Anterior">&#8592;</button>
+                <button id="modal-next-img-mobile" class="bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 text-3xl shadow-lg transition-slow" aria-label="Próxima">&#8594;</button>
             </div>
         </div>
     </div>
@@ -199,6 +205,7 @@
                 galeria.textContent = 'Nenhuma imagem disponível.';
             }
         }
+        // Setas desktop
         document.getElementById('modal-prev-img').addEventListener('click', function() {
             if (galeriaImgs.length > 0) {
                 galeriaIdx = (galeriaIdx - 1 + galeriaImgs.length) % galeriaImgs.length;
@@ -210,6 +217,56 @@
                 galeriaIdx = (galeriaIdx + 1) % galeriaImgs.length;
                 renderModalImg();
             }
+        });
+        // Setas mobile
+        document.getElementById('modal-prev-img-mobile').addEventListener('click', function() {
+            if (galeriaImgs.length > 0) {
+                galeriaIdx = (galeriaIdx - 1 + galeriaImgs.length) % galeriaImgs.length;
+                renderModalImg();
+            }
+        });
+        document.getElementById('modal-next-img-mobile').addEventListener('click', function() {
+            if (galeriaImgs.length > 0) {
+                galeriaIdx = (galeriaIdx + 1) % galeriaImgs.length;
+                renderModalImg();
+            }
+        });
+
+        // Swipe/touch para mobile
+        let touchStartX = null;
+        let touchEndX = null;
+        const modalGaleria = document.getElementById('modal-projeto-galeria');
+        modalGaleria.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) {
+                touchStartX = e.touches[0].clientX;
+            }
+        });
+        modalGaleria.addEventListener('touchmove', function(e) {
+            if (e.touches.length === 1) {
+                touchEndX = e.touches[0].clientX;
+            }
+        });
+        modalGaleria.addEventListener('touchend', function(e) {
+            if (touchStartX !== null && touchEndX !== null) {
+                const diff = touchEndX - touchStartX;
+                if (Math.abs(diff) > 50) {
+                    if (diff < 0) {
+                        // Swipe left: próxima
+                        if (galeriaImgs.length > 0) {
+                            galeriaIdx = (galeriaIdx + 1) % galeriaImgs.length;
+                            renderModalImg();
+                        }
+                    } else {
+                        // Swipe right: anterior
+                        if (galeriaImgs.length > 0) {
+                            galeriaIdx = (galeriaIdx - 1 + galeriaImgs.length) % galeriaImgs.length;
+                            renderModalImg();
+                        }
+                    }
+                }
+            }
+            touchStartX = null;
+            touchEndX = null;
         });
         document.getElementById('close-modal-projeto').addEventListener('click', function() {
             document.getElementById('modal-projeto-bg').classList.add('hidden');
