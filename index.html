@@ -228,9 +228,9 @@
                     <p class="text-lg mb-8">
                         Arquitetura que harmoniza forma e função, criando ambientes que contam histórias e inspiram o cotidiano.
                     </p>
-                    <a href="#contato" class="bg-primary hover:bg-opacity-90 text-light px-8 py-3 rounded-sm font-medium transition-slow inline-block hover-3d" data-animate="zoomIn">
+                    <button id="open-form-btn" type="button" class="bg-primary hover:bg-opacity-90 text-light px-8 py-3 rounded-sm font-medium transition-slow inline-block hover-3d" data-animate="zoomIn">
                         Inicie seu projeto
-                    </a>
+                    </button>
                 </div>
                 <div class="md:w-1/2 flex justify-center md:justify-end md:ml-8" data-animate="fadeInLeft">
                     <div class="relative w-full max-w-md">
@@ -360,6 +360,40 @@
         </div>
     </footer>
 
+    <!-- Popup Formulário -->
+    <div id="popup-form-bg" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-light rounded-lg shadow-lg max-w-lg w-full p-8 relative">
+            <button id="close-form-btn" class="absolute top-4 right-4 text-dark hover:text-primary text-2xl focus:outline-none" aria-label="Fechar">
+                &times;
+            </button>
+            <h2 class="text-2xl font-display font-bold mb-6 text-primary text-center">Inicie seu projeto</h2>
+            <form id="projeto-form" class="space-y-4">
+                <input type="hidden" name="form-origem" value="popup-inicie-projeto">
+                <div>
+                    <label for="nome" class="block text-dark font-medium mb-1">Nome</label>
+                    <input type="text" id="nome" name="nome" required class="w-full px-4 py-2 border border-primary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-white">
+                </div>
+                <div>
+                    <label for="email" class="block text-dark font-medium mb-1">E-mail</label>
+                    <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-primary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-white">
+                </div>
+                <div>
+                    <label for="telefone" class="block text-dark font-medium mb-1">Telefone (WhatsApp)</label>
+                    <input type="tel" id="telefone" name="telefone" required pattern="\(\d{2}\) \d{5}-\d{4}" placeholder="(99) 99999-9999" class="w-full px-4 py-2 border border-primary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-white">
+                </div>
+                <div>
+                    <label for="nascimento" class="block text-dark font-medium mb-1">Data de nascimento</label>
+                    <input type="date" id="nascimento" name="nascimento" required class="w-full px-4 py-2 border border-primary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-white">
+                </div>
+                <div>
+                    <label for="descricao" class="block text-dark font-medium mb-1">Descreva seu projeto</label>
+                    <textarea id="descricao" name="descricao" rows="4" required class="w-full px-4 py-2 border border-primary rounded focus:outline-none focus:ring-2 focus:ring-primary bg-white"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-primary text-light py-3 rounded font-medium hover:bg-opacity-90 transition-slow hover-3d">Enviar</button>
+            </form>
+            <div id="form-success" class="hidden text-green-600 text-center mt-4 font-medium">Mensagem enviada com sucesso!</div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
