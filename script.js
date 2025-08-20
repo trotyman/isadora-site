@@ -101,4 +101,86 @@ document.addEventListener('DOMContentLoaded', function () {
         const randomAnim = animations[Math.floor(Math.random() * animations.length)];
         el.setAttribute('data-animate', randomAnim);
     });
+
+    // --- Projetos dinâmicos ---
+    function renderProjetos() {
+        fetch('/api/list_projects')
+            .then(res => res.json())
+            .then(data => {
+                const projetos = data.projects || [];
+                const container = document.getElementById('projetos-container');
+                if (!container) return;
+                container.innerHTML = '';
+                projetos.forEach((proj, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'group relative overflow-hidden hover-3d cursor-pointer';
+                    card.setAttribute('data-animate', 'fadeIn');
+                    card.setAttribute('tabindex', '0');
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('aria-label', proj.name);
+                    card.innerHTML = `
+                        <div class="h-80 overflow-hidden flex items-center justify-center bg-white">
+                            <img src="${proj.images[0] || ''}" alt="${proj.name}" class="w-full h-full object-cover group-hover:scale-105 transition-slow" onerror="this.style.display='none'">
+                        </div>
+                        <div class="absolute inset-0 bg-primary bg-opacity-0 group-hover:bg-opacity-20 transition-slow flex items-center justify-center">
+                            <h3 class="text-white opacity-0 group-hover:opacity-100 text-xl font-display transition-slow">${proj.name.replace(/_/g, ' ')}</h3>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => openProjetoModal(proj));
+                    container.appendChild(card);
+                });
+            });
+    }
+
+    // Modal galeria
+    let galeriaImgs = [];
+    let galeriaIdx = 0;
+    function openProjetoModal(proj) {
+        galeriaImgs = proj.images;
+        galeriaIdx = 0;
+        document.getElementById('modal-projeto-title').textContent = proj.name.replace(/_/g, ' ');
+        renderModalImg();
+        document.getElementById('modal-projeto-bg').classList.remove('hidden');
+    }
+    function renderModalImg() {
+        const galeria = document.getElementById('modal-projeto-galeria');
+        galeria.innerHTML = '';
+        if (galeriaImgs.length > 0) {
+            const img = document.createElement('img');
+            img.src = galeriaImgs[galeriaIdx];
+            img.alt = '';
+            img.className = 'max-h-[60vh] w-auto rounded shadow';
+            galeria.appendChild(img);
+            galeria.appendChild(document.createElement('br'));
+            const count = document.createElement('div');
+            count.className = 'text-dark text-sm mt-2';
+            count.textContent = `Imagem ${galeriaIdx+1} de ${galeriaImgs.length}`;
+            galeria.appendChild(count);
+        } else {
+            galeria.textContent = 'Nenhuma imagem disponível.';
+        }
+    }
+    document.getElementById('modal-prev-img').addEventListener('click', function() {
+        if (galeriaImgs.length > 0) {
+            galeriaIdx = (galeriaIdx - 1 + galeriaImgs.length) % galeriaImgs.length;
+            renderModalImg();
+        }
+    });
+    document.getElementById('modal-next-img').addEventListener('click', function() {
+        if (galeriaImgs.length > 0) {
+            galeriaIdx = (galeriaIdx + 1) % galeriaImgs.length;
+            renderModalImg();
+        }
+    });
+    document.getElementById('close-modal-projeto').addEventListener('click', function() {
+        document.getElementById('modal-projeto-bg').classList.add('hidden');
+    });
+    document.getElementById('modal-projeto-bg').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.add('hidden');
+        }
+    });
+
+    // Inicializar projetos ao carregar
+    renderProjetos();
 });

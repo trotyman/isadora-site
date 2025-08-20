@@ -277,40 +277,17 @@
         <div class="container mx-auto px-6">
             <h2 class="text-3xl md:text-4xl font-display font-bold text-center mb-16" data-animate="zoomIn">Portfólio</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Projeto 1 -->
-                <div class="group relative overflow-hidden hover-3d" data-animate="fadeInLeft">
-                    <div class="h-80 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
-                             alt="Residência Alameda" 
-                             class="w-full h-full object-cover group-hover:scale-105 transition-slow">
-                    </div>
-                    <div class="absolute inset-0 bg-primary bg-opacity-0 group-hover:bg-opacity-20 transition-slow flex items-center justify-center">
-                        <h3 class="text-white opacity-0 group-hover:opacity-100 text-xl font-display transition-slow">Residência Alameda</h3>
-                    </div>
-                </div>
-                
-                <!-- Projeto 2 -->
-                <div class="group relative overflow-hidden hover-3d" data-animate="fadeInUp" style="transition-delay: 0.2s;">
-                    <div class="h-80 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1600566752227-8f61e5752158?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-                             alt="Escritório Vertical" 
-                             class="w-full h-full object-cover group-hover:scale-105 transition-slow">
-                    </div>
-                    <div class="absolute inset-0 bg-primary bg-opacity-0 group-hover:bg-opacity-20 transition-slow flex items-center justify-center">
-                        <h3 class="text-white opacity-0 group-hover:opacity-100 text-xl font-display transition-slow">Escritório Vertical</h3>
-                    </div>
-                </div>
-                
-                <!-- Projeto 3 -->
-                <div class="group relative overflow-hidden hover-3d" data-animate="fadeInRight" style="transition-delay: 0.4s;">
-                    <div class="h-80 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1600607688969-a5bfcd646154?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-                             alt="Café Moderno" 
-                             class="w-full h-full object-cover group-hover:scale-105 transition-slow">
-                    </div>
-                    <div class="absolute inset-0 bg-primary bg-opacity-0 group-hover:bg-opacity-20 transition-slow flex items-center justify-center">
-                        <h3 class="text-white opacity-0 group-hover:opacity-100 text-xl font-display transition-slow">Café Moderno</h3>
+            <div id="projetos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+            <!-- Modal Galeria de Projeto -->
+            <div id="modal-projeto-bg" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden px-2">
+                <div class="bg-light rounded-lg shadow-lg w-full max-w-2xl p-4 sm:p-6 md:p-8 relative overflow-y-auto max-h-[95vh] box-border flex flex-col">
+                    <button id="close-modal-projeto" class="absolute top-4 right-4 text-dark hover:text-primary text-2xl focus:outline-none" aria-label="Fechar">&times;</button>
+                    <h2 id="modal-projeto-title" class="text-2xl font-display font-bold mb-4 text-primary text-center"></h2>
+                    <div id="modal-projeto-galeria" class="flex flex-col items-center justify-center gap-4"></div>
+                    <div class="flex justify-center gap-4 mt-4">
+                        <button id="modal-prev-img" class="bg-primary text-light px-4 py-2 rounded hover:bg-opacity-90 transition-slow">Anterior</button>
+                        <button id="modal-next-img" class="bg-primary text-light px-4 py-2 rounded hover:bg-opacity-90 transition-slow">Próxima</button>
                     </div>
                 </div>
             </div>
@@ -349,7 +326,7 @@
                 
                 <div data-animate="fadeInRight" style="transition-delay: 0.4s;">
                     <h4 class="text-xl font-display font-semibold mb-4">Atendimento</h4>
-                    <p class="text-secondary">Segunda a Sexta: 9h às 16h</p>
+                    <p class="text-secondary">Segunda a Sexta: 8h às 16h</p>
                     <p class="text-secondary">Sábado: 10h às 14h</p>
                 </div>
             </div>
