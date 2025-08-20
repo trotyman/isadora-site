@@ -1,0 +1,68 @@
+// script.js extraído do index.html
+// Menu mobile
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+
+mobileMenuButton.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+});
+
+// Suavizar scroll para links internos
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+            });
+            // Fechar menu mobile se estiver aberto
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+        }
+    });
+});
+
+// Destacar link ativo no menu
+const navLinks = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll', () => {
+    let fromTop = window.scrollY + 100;
+    navLinks.forEach(link => {
+        const section = document.querySelector(link.getAttribute('href'));
+        if (
+            section.offsetTop <= fromTop &&
+            section.offsetTop + section.offsetHeight > fromTop
+        ) {
+            link.classList.add('text-primary', 'font-medium');
+            link.classList.remove('hover:text-primary');
+        } else {
+            link.classList.remove('text-primary', 'font-medium');
+            link.classList.add('hover:text-primary');
+        }
+    });
+});
+
+// ANIMAÇÕES - Observador de elementos na tela
+const animateOnScroll = () => {
+    document.querySelectorAll('[data-animate]').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        // Mudança aqui: de 0.85 para 0.99
+        const isVisible = (rect.top <= window.innerHeight * 0.99);
+        if (isVisible) {
+            el.classList.add('animated');
+        }
+    });
+};
+// Ativa na carga e no scroll
+window.addEventListener('load', animateOnScroll);
+window.addEventListener('scroll', animateOnScroll);
+
+// Aleatorizar direções das animações
+document.querySelectorAll('[data-animate]').forEach(el => {
+    const animations = ['fadeIn', 'fadeInLeft', 'fadeInRight', 'fadeInDown', 'fadeInUp', 'zoomIn', 'rotateIn'];
+    const randomAnim = animations[Math.floor(Math.random() * animations.length)];
+    el.setAttribute('data-animate', randomAnim);
+});
