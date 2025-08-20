@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const navLinks = document.querySelectorAll('.nav-link');
     window.addEventListener('scroll', () => {
         let fromTop = window.scrollY + 100;
+        let found = false;
         navLinks.forEach(link => {
             const section = document.querySelector(link.getAttribute('href'));
             if (
@@ -73,11 +74,21 @@ document.addEventListener('DOMContentLoaded', function () {
             ) {
                 link.classList.add('text-primary', 'font-medium');
                 link.classList.remove('hover:text-primary');
+                found = true;
             } else {
                 link.classList.remove('text-primary', 'font-medium');
                 link.classList.add('hover:text-primary');
             }
         });
+        // Se chegou ao final da página, destaca o link Contato
+        if (!found && window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === '#contato') {
+                    link.classList.add('text-primary', 'font-medium');
+                    link.classList.remove('hover:text-primary');
+                }
+            });
+        }
     });
 
     // ANIMAÇÕES - Observador de elementos na tela
