@@ -120,30 +120,36 @@
                     const container = document.getElementById('projetos-lista');
                     if (!container) return;
                     container.innerHTML = '';
-                    projetos.forEach((proj, idx) => {
-                        // Frases genéricas para descrição do projeto e das imagens
-                        const descProjeto = `Projeto ${proj.name.replace(/_/g, ' ')}: este é um exemplo de descrição breve do projeto, destacando diferenciais, conceito e resultados.`;
-                        const imgDescs = proj.images.map((img, i) => `Imagem ${i+1} do projeto ${proj.name.replace(/_/g, ' ')}: descrição genérica da imagem para testes de layout e navegação.`);
+                            projetos.forEach((proj, idx) => {
+                                // Frases genéricas para descrição do projeto e das imagens
+                                const descProjeto = `Projeto ${proj.name.replace(/_/g, ' ')}: este é um exemplo de descrição breve do projeto, destacando diferenciais, conceito e resultados.`;
+                                const imgDescs = proj.images.map((img, i) => `Imagem ${i+1} do projeto ${proj.name.replace(/_/g, ' ')}: descrição genérica da imagem para testes de layout e navegação.`);
 
-                        // Projeto em linha, sem card de fundo
-                        const linha = document.createElement('div');
-                        linha.className = 'flex flex-col md:flex-row items-center gap-8 w-full cursor-pointer group';
-                        linha.setAttribute('data-animate', 'fadeInUp');
-                        linha.tabIndex = 0;
-                        linha.setAttribute('role', 'button');
-                        linha.setAttribute('aria-label', proj.name);
-                        linha.innerHTML = `
-                            <div class="w-full md:w-1/3 h-48 md:h-56 flex-shrink-0 overflow-hidden flex items-center justify-center">
-                                <img src="${proj.images[0] || ''}" alt="${proj.name}" class="w-full h-full object-cover transition-slow group-hover:scale-105 rounded-lg" onerror="this.style.display='none'">
-                            </div>
-                            <div class="flex-1 flex flex-col justify-center items-start md:pl-8 w-full">
-                                <h3 class="text-2xl font-display font-bold mb-2 text-primary">${proj.name.replace(/_/g, ' ')}</h3>
-                                <p class="text-dark text-base mb-2">${descProjeto}</p>
-                                <span class="text-sm text-secondary">Clique para ver as fotos do projeto</span>
-                            </div>
-                        `;
-                        linha.addEventListener('click', () => openProjetoModal(proj, imgDescs, descProjeto));
-                        container.appendChild(linha);
+                                // Projeto em linha, sem card de fundo
+                                const linha = document.createElement('div');
+                                linha.className = 'flex flex-col md:flex-row items-center gap-8 w-full cursor-pointer group';
+                                linha.setAttribute('data-animate', 'fadeInUp');
+                                linha.tabIndex = 0;
+                                linha.setAttribute('role', 'button');
+                                linha.setAttribute('aria-label', proj.name);
+                                linha.innerHTML = `
+                                    <div class="w-full md:w-1/3 h-48 md:h-56 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                                        <img src="${proj.images[0] || ''}" alt="${proj.name}" class="w-full h-full object-cover transition-slow group-hover:scale-105 rounded-lg" onerror="this.style.display='none'">
+                                    </div>
+                                    <div class="flex-1 flex flex-col justify-center items-start md:pl-8 w-full">
+                                        <h3 class="text-2xl font-display font-bold mb-2 text-primary">${proj.name.replace(/_/g, ' ')}</h3>
+                                        <p class="text-dark text-base mb-2">${descProjeto}</p>
+                                        <span class="text-sm text-secondary">Clique para ver as fotos do projeto</span>
+                                    </div>
+                                `;
+                                linha.addEventListener('click', () => openProjetoModal(proj, imgDescs, descProjeto));
+                                container.appendChild(linha);
+                                // Linha divisória, exceto após o último
+                                if (idx < projetos.length - 1) {
+                                    const divider = document.createElement('div');
+                                    divider.className = 'w-full border-t border-gray-300 my-4';
+                                    container.appendChild(divider);
+                                }
                     });
 
                     // Animações de entrada
