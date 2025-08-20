@@ -60,41 +60,43 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Destacar link ativo no menu
+    // Destacar link ativo no menu (apenas na página inicial)
     const navLinks = document.querySelectorAll('.nav-link');
-    window.addEventListener('scroll', () => {
-        let fromTop = window.scrollY + 100;
-        let found = false;
-        navLinks.forEach(link => {
-            const section = document.querySelector(link.getAttribute('href'));
-            if (
-                section &&
-                section.offsetTop <= fromTop &&
-                section.offsetTop + section.offsetHeight > fromTop
-            ) {
-                link.classList.add('text-primary', 'font-medium');
-                link.classList.remove('hover:text-primary');
-                found = true;
-            } else {
-                link.classList.remove('text-primary', 'font-medium');
-                link.classList.add('hover:text-primary');
+    if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
+        window.addEventListener('scroll', () => {
+            let fromTop = window.scrollY + 100;
+            let found = false;
+            navLinks.forEach(link => {
+                const section = document.querySelector(link.getAttribute('href'));
+                if (
+                    section &&
+                    section.offsetTop <= fromTop &&
+                    section.offsetTop + section.offsetHeight > fromTop
+                ) {
+                    link.classList.add('text-primary', 'font-medium');
+                    link.classList.remove('hover:text-primary');
+                    found = true;
+                } else {
+                    link.classList.remove('text-primary', 'font-medium');
+                    link.classList.add('hover:text-primary');
+                }
+            });
+            // Se chegou ao final da página, destaca o link Contato
+            const footer = document.getElementById('contato');
+            const buffer = 40; // margem para garantir que o rodapé está visível
+            if (!found && footer) {
+                const footerRect = footer.getBoundingClientRect();
+                if (footerRect.top < window.innerHeight - buffer) {
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === '#contato') {
+                            link.classList.add('text-primary', 'font-medium');
+                            link.classList.remove('hover:text-primary');
+                        }
+                    });
+                }
             }
         });
-        // Se chegou ao final da página, destaca o link Contato
-        const footer = document.getElementById('contato');
-        const buffer = 40; // margem para garantir que o rodapé está visível
-        if (!found && footer) {
-            const footerRect = footer.getBoundingClientRect();
-            if (footerRect.top < window.innerHeight - buffer) {
-                navLinks.forEach(link => {
-                    if (link.getAttribute('href') === '#contato') {
-                        link.classList.add('text-primary', 'font-medium');
-                        link.classList.remove('hover:text-primary');
-                    }
-                });
-            }
-        }
-    });
+    }
 
     // ANIMAÇÕES - Observador de elementos na tela
     const animateOnScroll = () => {

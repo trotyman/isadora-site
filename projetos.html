@@ -48,7 +48,7 @@
                 <div class="flex items-center gap-2">
                     <img src="SIMBOLOV.png" alt="Logo Isadora Carvalho" class="h-10">
                     <span class="text-2xl font-display text-primary"></span>
-                    <span class="text-2xl font-display text-dark">Isadora Carvalho</span>
+                    <a href="index.html#inicio" class="text-2xl font-display text-dark hover:text-primary transition-slow">Isadora Carvalho</a>
                 </div>
                 <div class="md:hidden">
                     <button id="mobile-menu-button" class="text-dark focus:outline-none">
@@ -57,7 +57,7 @@
                 </div>
                 <nav class="hidden md:block">
                     <ul class="flex space-x-8">
-                        <li><a href="index.html#inicio" class="nav-link font-medium text-primary link-underline">Início</a></li>
+                        <li><a href="index.html#inicio" class="nav-link hover:text-primary transition-slow link-underline">Início</a></li>
                         <li><a href="index.html#sobre" class="nav-link hover:text-primary transition-slow link-underline">Sobre</a></li>
                         <li><a href="index.html#portfolio" class="nav-link hover:text-primary transition-slow link-underline">Portfólio</a></li>
                         <li><a href="index.html#contato" class="nav-link hover:text-primary transition-slow link-underline">Contato</a></li>
@@ -112,6 +112,41 @@
     <script>
     // Menu mobile igual ao index
     document.addEventListener('DOMContentLoaded', function () {
+        // Destacar link ativo no menu (corrigir para contato no final)
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let fromTop = window.scrollY + 100;
+            let found = false;
+            navLinks.forEach(link => {
+                const section = document.querySelector(link.getAttribute('href'));
+                if (
+                    section &&
+                    section.offsetTop <= fromTop &&
+                    section.offsetTop + section.offsetHeight > fromTop
+                ) {
+                    link.classList.add('text-primary', 'font-medium');
+                    link.classList.remove('hover:text-primary');
+                    found = true;
+                } else {
+                    link.classList.remove('text-primary', 'font-medium');
+                    link.classList.add('hover:text-primary');
+                }
+            });
+            // Se chegou ao final da página, destaca o link Contato
+            const footer = document.getElementById('contato');
+            const buffer = 40;
+            if (!found && footer) {
+                const footerRect = footer.getBoundingClientRect();
+                if (footerRect.top < window.innerHeight - buffer) {
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === 'index.html#contato' || link.getAttribute('href') === '#contato') {
+                            link.classList.add('text-primary', 'font-medium');
+                            link.classList.remove('hover:text-primary');
+                        }
+                    });
+                }
+            }
+        });
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         if (mobileMenuButton && mobileMenu) {
