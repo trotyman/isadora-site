@@ -34,12 +34,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (projetoForm) {
         projetoForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            // Aqui você pode adicionar integração com backend/email se desejar
-            formSuccess.classList.remove('hidden');
+            // O Formsubmit abre em nova aba, então só fechamos o popup
             setTimeout(() => {
                 popupFormBg.classList.add('hidden');
-            }, 2000);
+            }, 500);
         });
     }
 
