@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projetos Completos | Isadora Carvalho</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@preline/preline@2.0.0/dist/preline.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/north-carossela" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/rotato-sans" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    'display': ['"North Carossela"', 'serif'],
+                    'body': ['"Rotato Sans"', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        primary: '#cc8a7a',
+                        secondary: '#999b85',
+                        light: '#f4efec',
+                        dark: '#6e6b5c',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f4efec; }
+        .transition-slow { transition: all 0.5s ease; }
+        .hover-3d { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hover-3d:hover { transform: translateY(-8px) rotateX(5deg); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .portfolio-card { background-color: #fff; border: 1px solid #d9a066; border-radius: 12px; transition: transform 0.3s ease; }
+        .portfolio-card:hover { transform: scale(1.02); box-shadow: 0 8px 20px rgba(217,160,102,0.2); }
+        .portfolio-card h3 { color: #3b4b5a; }
+        .link-underline { position: relative; }
+        .link-underline::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background-color: currentColor; transition: width 0.4s ease; }
+        .link-underline:hover::after { width: 100%; }
+    </style>
+</head>
+<body class="font-body text-dark bg-light overflow-x-hidden">
+    <!-- Header/Navbar (copiado da página principal) -->
+    <header class="fixed w-full bg-light bg-opacity-95 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <img src="SIMBOLOV.png" alt="Logo Isadora Carvalho" class="h-10">
+                    <span class="text-2xl font-display text-primary"></span>
+                    <span class="text-2xl font-display text-dark">Isadora Carvalho</span>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-dark focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+                <nav class="hidden md:block">
+                    <ul class="flex space-x-8">
+                        <li><a href="index.html#inicio" class="nav-link font-medium text-primary link-underline">Início</a></li>
+                        <li><a href="index.html#sobre" class="nav-link hover:text-primary transition-slow link-underline">Sobre</a></li>
+                        <li><a href="index.html#portfolio" class="nav-link hover:text-primary transition-slow link-underline">Portfólio</a></li>
+                        <li><a href="index.html#contato" class="nav-link hover:text-primary transition-slow link-underline">Contato</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-light py-4 px-6">
+            <ul class="space-y-4">
+                <li><a href="index.html#inicio" class="block py-2 text-primary font-medium link-underline">Início</a></li>
+                <li><a href="index.html#sobre" class="block py-2 hover:text-primary transition-slow link-underline">Sobre</a></li>
+                <li><a href="index.html#portfolio" class="block py-2 hover:text-primary transition-slow link-underline">Portfólio</a></li>
+                <li><a href="index.html#contato" class="block py-2 hover:text-primary transition-slow link-underline">Contato</a></li>
+            </ul>
+        </div>
+    </header>
+    <main class="pt-24 pb-16 min-h-screen">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-display font-bold text-center mb-10 text-primary">Projetos Completos</h1>
+            <p class="text-lg text-center mb-12 max-w-2xl mx-auto text-dark">Aqui você encontra a lista completa de projetos desenvolvidos por Isadora Carvalho Arquitetura. Explore cada projeto para conhecer detalhes, imagens e inspirações. Esta página é um exemplo de layout secundário para testes de design, cores e navegação.</p>
+            <div id="projetos-lista" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            <div id="projetos-lista" class="flex flex-col gap-10"></div>
+        </div>
+    </main>
+    <footer class="bg-dark text-light py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Isadora Carvalho Arquitetura. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Galeria de Projeto -->
+    <div id="modal-projeto-bg" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden px-2">
+        <div class="bg-light rounded-lg shadow-lg w-full max-w-2xl p-4 sm:p-6 md:p-8 relative overflow-y-auto max-h-[95vh] box-border flex flex-col">
+            <button id="close-modal-projeto" class="absolute top-4 right-4 text-dark hover:text-primary text-2xl focus:outline-none" aria-label="Fechar">&times;</button>
+            <h2 id="modal-projeto-title" class="text-2xl font-display font-bold mb-4 text-primary text-center"></h2>
+            <div id="modal-projeto-desc" class="text-dark text-base mb-4 text-center"></div>
+            <div id="modal-projeto-galeria" class="flex flex-col items-center justify-center gap-4"></div>
+            <div class="flex justify-center gap-4 mt-4">
+                <button id="modal-prev-img" class="bg-primary text-light px-4 py-2 rounded hover:bg-opacity-90 transition-slow">Anterior</button>
+                <button id="modal-next-img" class="bg-primary text-light px-4 py-2 rounded hover:bg-opacity-90 transition-slow">Próxima</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    // Menu mobile igual ao index
+    document.addEventListener('DOMContentLoaded', function () {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // --- Projetos dinâmicos com layout customizado ---
+        function renderProjetos() {
+            fetch('/api/list_projects')
+                .then(res => res.json())
+                .then(data => {
+                    const projetos = data.projects || [];
+                    const container = document.getElementById('projetos-lista');
+                    if (!container) return;
+                    container.innerHTML = '';
+                    projetos.forEach((proj, idx) => {
+                        // Frases genéricas para descrição do projeto e das imagens
+                        const descProjeto = `Projeto ${proj.name.replace(/_/g, ' ')}: este é um exemplo de descrição breve do projeto, destacando diferenciais, conceito e resultados.`;
+                        const imgDescs = proj.images.map((img, i) => `Imagem ${i+1} do projeto ${proj.name.replace(/_/g, ' ')}: descrição genérica da imagem para testes de layout e navegação.`);
+
+                        // Card do projeto
+                        const card = document.createElement('div');
+                        card.className = 'flex flex-col md:flex-row items-center gap-6 bg-white rounded-lg shadow-md p-6 hover-3d cursor-pointer portfolio-card group';
+                        card.setAttribute('data-animate', 'fadeInUp');
+                        card.tabIndex = 0;
+                        card.setAttribute('role', 'button');
+                        card.setAttribute('aria-label', proj.name);
+                        card.innerHTML = `
+                            <div class="w-full md:w-64 h-48 md:h-40 flex-shrink-0 overflow-hidden rounded-lg bg-light flex items-center justify-center">
+                                <img src="${proj.images[0] || ''}" alt="${proj.name}" class="w-full h-full object-cover transition-slow group-hover:scale-105" onerror="this.style.display='none'">
+                            </div>
+                            <div class="flex-1 flex flex-col justify-center items-start md:pl-6">
+                                <h3 class="text-2xl font-display font-bold mb-2 text-primary">${proj.name.replace(/_/g, ' ')}</h3>
+                                <p class="text-dark text-base mb-2">${descProjeto}</p>
+                                <span class="text-sm text-secondary">Clique para ver as fotos do projeto</span>
+                            </div>
+                        `;
+                        card.addEventListener('click', () => openProjetoModal(proj, imgDescs, descProjeto));
+                        container.appendChild(card);
+                    });
+
+                    // Animações de entrada
+                    setTimeout(() => {
+                        document.querySelectorAll('[data-animate]').forEach(el => {
+                            el.classList.add('animated');
+                        });
+                    }, 100);
+                });
+        }
+
+        // Modal galeria com descrição
+        let galeriaImgs = [];
+        let galeriaIdx = 0;
+        let galeriaDescs = [];
+        let galeriaProjetoDesc = '';
+        function openProjetoModal(proj, imgDescs, descProjeto) {
+            galeriaImgs = proj.images;
+            galeriaDescs = imgDescs;
+            galeriaIdx = 0;
+            galeriaProjetoDesc = descProjeto;
+            document.getElementById('modal-projeto-title').textContent = proj.name.replace(/_/g, ' ');
+            renderModalImg();
+            document.getElementById('modal-projeto-bg').classList.remove('hidden');
+        }
+        function renderModalImg() {
+            const galeria = document.getElementById('modal-projeto-galeria');
+            galeria.innerHTML = '';
+            if (galeriaImgs.length > 0) {
+                const img = document.createElement('img');
+                img.src = galeriaImgs[galeriaIdx];
+                img.alt = '';
+                img.className = 'max-h-[60vh] w-auto rounded shadow';
+                galeria.appendChild(img);
+                galeria.appendChild(document.createElement('br'));
+                const desc = document.createElement('div');
+                desc.className = 'text-dark text-base mt-2 mb-2 text-center';
+                desc.textContent = galeriaDescs[galeriaIdx] || '';
+                galeria.appendChild(desc);
+                const count = document.createElement('div');
+                count.className = 'text-dark text-sm mt-2';
+                count.textContent = `Imagem ${galeriaIdx+1} de ${galeriaImgs.length}`;
+                galeria.appendChild(count);
+            } else {
+                galeria.textContent = 'Nenhuma imagem disponível.';
+            }
+            // Descrição do projeto
+            const descProjetoDiv = document.getElementById('modal-projeto-desc');
+            if (descProjetoDiv) {
+                descProjetoDiv.textContent = galeriaProjetoDesc;
+            }
+        }
+        document.getElementById('modal-prev-img').addEventListener('click', function() {
+            if (galeriaImgs.length > 0) {
+                galeriaIdx = (galeriaIdx - 1 + galeriaImgs.length) % galeriaImgs.length;
+                renderModalImg();
+            }
+        });
+        document.getElementById('modal-next-img').addEventListener('click', function() {
+            if (galeriaImgs.length > 0) {
+                galeriaIdx = (galeriaIdx + 1) % galeriaImgs.length;
+                renderModalImg();
+            }
+        });
+        document.getElementById('close-modal-projeto').addEventListener('click', function() {
+            document.getElementById('modal-projeto-bg').classList.add('hidden');
+        });
+        document.getElementById('modal-projeto-bg').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+
+        renderProjetos();
+    });
+    </script>
+</body>
+</html>
