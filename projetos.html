@@ -95,17 +95,17 @@
             <div class="w-full flex items-center justify-center relative" style="height:70vh;">
                 <div id="modal-projeto-galeria" class="flex flex-col items-center justify-center w-full h-full"></div>
                 <!-- Setas laterais só em telas md+ -->
-                <button id="modal-prev-img" class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 md:p-4 text-3xl md:text-5xl shadow-lg z-40 transition-slow items-center justify-center" aria-label="Anterior">
-                    &#8592;
+                <button id="modal-prev-img" class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 md:p-4 text-3xl md:text-5xl shadow-lg z-40 transition-slow items-center justify-center leading-none" style="line-height:1;" aria-label="Anterior">
+                    <span style="position:relative;top:-2px;">&#8592;</span>
                 </button>
-                <button id="modal-next-img" class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 md:p-4 text-3xl md:text-5xl shadow-lg z-40 transition-slow items-center justify-center" aria-label="Próxima">
-                    &#8594;
+                <button id="modal-next-img" class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 md:p-4 text-3xl md:text-5xl shadow-lg z-40 transition-slow items-center justify-center leading-none" style="line-height:1;" aria-label="Próxima">
+                    <span style="position:relative;top:-2px;">&#8594;</span>
                 </button>
             </div>
             <!-- Setas embaixo da imagem no mobile -->
             <div class="flex md:hidden justify-center gap-8 mt-4">
-                <button id="modal-prev-img-mobile" class="bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 text-3xl shadow-lg transition-slow" aria-label="Anterior">&#8592;</button>
-                <button id="modal-next-img-mobile" class="bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 text-3xl shadow-lg transition-slow" aria-label="Próxima">&#8594;</button>
+                <button id="modal-prev-img-mobile" class="bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 text-3xl shadow-lg transition-slow leading-none" style="line-height:1;" aria-label="Anterior"><span style="position:relative;top:-2px;">&#8592;</span></button>
+                <button id="modal-next-img-mobile" class="bg-primary bg-opacity-80 hover:bg-opacity-100 text-light rounded-full p-3 text-3xl shadow-lg transition-slow leading-none" style="line-height:1;" aria-label="Próxima"><span style="position:relative;top:-2px;">&#8594;</span></button>
             </div>
         </div>
     </div>
