@@ -164,12 +164,26 @@ document.addEventListener('DOMContentLoaded', function () {
         const galeria = document.getElementById('modal-projeto-galeria');
         galeria.innerHTML = '';
         if (galeriaImgs.length > 0) {
+            // Spinner de loading
+            const spinner = document.createElement('div');
+            spinner.className = 'flex items-center justify-center w-full h-[60vh]';
+            spinner.innerHTML = `<span class="inline-block w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></span>`;
+            galeria.appendChild(spinner);
+
             const img = document.createElement('img');
             img.src = galeriaImgs[galeriaIdx];
             img.alt = '';
-            img.className = 'max-h-[60vh] w-auto rounded shadow';
+            img.className = 'max-h-[60vh] w-auto rounded shadow hidden';
+            img.onload = function() {
+                spinner.remove();
+                img.classList.remove('hidden');
+            };
+            img.onerror = function() {
+                spinner.remove();
+                galeria.textContent = 'Erro ao carregar imagem.';
+            };
             galeria.appendChild(img);
-            galeria.appendChild(document.createElement('br'));
+
             const count = document.createElement('div');
             count.className = 'text-dark text-sm mt-2';
             count.textContent = `Imagem ${galeriaIdx+1} de ${galeriaImgs.length}`;
