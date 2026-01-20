@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "id": "mkednoyeadvqcvg5u24",
+      "username": "isadora",
+      "password": "$2a$10$uzVY9YWETCpVYmsgdr9Bz.euSsmjqMF2obYgnqMV.iyHgPrV2eHN2",
+      "name": "Isadora Carvalho",
+      "role": "admin",
+      "createdAt": "2026-01-14T18:52:03.734Z"
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "note": "Usuário padrão será criado automaticamente ao iniciar o servidor"
+  }
+}

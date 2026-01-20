@@ -1,0 +1,282 @@
+/**
+ * Isadora Carvalho Arquitetura
+ * Projetos Page Specific Styles
+ */
+
+/* ===== Projetos Hero ===== */
+.projetos-hero {
+    padding: calc(100px + var(--space-2xl)) 0 var(--space-2xl);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.projetos-hero-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.projetos-hero-content .section-label::before {
+    display: none;
+}
+
+.projetos-hero-content .section-label {
+    padding-left: 0;
+}
+
+.projetos-hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: var(--space-lg);
+}
+
+.projetos-hero-intro {
+    font-size: 1.1rem;
+    color: var(--color-gray-500);
+    line-height: 1.8;
+}
+
+/* ===== Filters ===== */
+.projetos-filters {
+    padding: var(--space-xl) 0;
+    position: relative;
+    z-index: 1;
+}
+
+.filters-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.filter-btn {
+    padding: var(--space-sm) var(--space-lg);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-gray-500);
+    background: transparent;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-full);
+    transition: var(--transition-base);
+}
+
+.filter-btn:hover {
+    color: var(--color-dark);
+    border-color: var(--color-dark);
+}
+
+.filter-btn.active {
+    color: var(--color-white);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* ===== Projects List ===== */
+.projetos-lista-section {
+    padding: var(--space-xl) 0 var(--space-3xl);
+    position: relative;
+    z-index: 1;
+}
+
+.projetos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ===== Project Item ===== */
+.projeto-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-xl) 0;
+    border-bottom: 1px solid var(--color-gray-200);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+@media (min-width: 768px) {
+    .projeto-item {
+        grid-template-columns: 1fr 1.5fr;
+        gap: var(--space-2xl);
+        align-items: center;
+    }
+    
+    .projeto-item:nth-child(even) {
+        grid-template-columns: 1.5fr 1fr;
+    }
+    
+    .projeto-item:nth-child(even) .projeto-image-wrapper {
+        order: 2;
+    }
+    
+    .projeto-item:nth-child(even) .projeto-info {
+        order: 1;
+    }
+}
+
+.projeto-item:hover {
+    background: rgba(244, 239, 236, 0.5);
+}
+
+.projeto-item:first-child {
+    padding-top: 0;
+}
+
+/* Project Image */
+.projeto-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    aspect-ratio: 16/10;
+}
+
+.projeto-image-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    transition: var(--transition-base);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.projeto-item:hover .projeto-image-wrapper::before {
+    border-color: var(--color-primary);
+}
+
+.projeto-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-slow);
+}
+
+.projeto-item:hover .projeto-image {
+    transform: scale(1.05);
+}
+
+.projeto-image-wrapper.no-image {
+    background: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-200) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.projeto-image-wrapper.no-image::after {
+    content: 'Imagem em breve';
+    font-size: 0.85rem;
+    color: var(--color-gray-400);
+}
+
+/* Project Info */
+.projeto-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.projeto-category {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+}
+
+.projeto-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--color-dark-deep);
+    transition: var(--transition-fast);
+}
+
+.projeto-item:hover .projeto-title {
+    color: var(--color-primary);
+}
+
+.projeto-description {
+    color: var(--color-gray-500);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.projeto-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    margin-top: var(--space-sm);
+}
+
+.projeto-meta-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.85rem;
+    color: var(--color-gray-500);
+}
+
+.projeto-meta-item i {
+    color: var(--color-secondary);
+}
+
+.projeto-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--color-dark);
+    margin-top: var(--space-sm);
+    transition: var(--transition-fast);
+}
+
+.projeto-cta i {
+    transition: var(--transition-fast);
+}
+
+.projeto-item:hover .projeto-cta {
+    color: var(--color-primary);
+}
+
+.projeto-item:hover .projeto-cta i {
+    transform: translateX(5px);
+}
+
+/* ===== Modal Description ===== */
+.modal-description {
+    max-width: 600px;
+    margin: var(--space-lg) auto 0;
+    text-align: center;
+    color: var(--color-gray-400);
+    font-size: 0.95rem;
+}
+
+/* ===== Empty State ===== */
+.projetos-empty {
+    text-align: center;
+    padding: var(--space-3xl) var(--space-lg);
+    color: var(--color-gray-500);
+}
+
+.projetos-empty i {
+    font-size: 3rem;
+    color: var(--color-gray-300);
+    margin-bottom: var(--space-lg);
+}
+
+.projetos-empty h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+/* ===== Loading State ===== */
+.projetos-loading {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-3xl);
+}
