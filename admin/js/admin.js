@@ -211,7 +211,7 @@ async function loadRecentProjects() {
                 <div class="project-list-item">
                     <div class="project-list-thumb">
                         ${project.coverImage
-                            ? `<img src="/uploads/projects/${project.id}/${getFileById(project, project.coverImage)?.filename}" alt="">`
+                            ? `<img src="${getFileUrl(project, project.coverImage)}" alt="">`
                             : '<i class="fas fa-image"></i>'
                         }
                     </div>
@@ -269,7 +269,7 @@ function renderProjects(projects) {
         <div class="project-card">
             <div class="project-cover">
                 ${project.coverImage
-                    ? `<img src="/uploads/projects/${project.id}/${getFileById(project, project.coverImage)?.filename}" alt="">`
+                    ? `<img src="${getFileUrl(project, project.coverImage)}" alt="">`
                     : '<i class="fas fa-image"></i>'
                 }
                 <span class="project-status-badge status-${project.status}">${capitalizeFirst(project.status)}</span>
@@ -538,12 +538,14 @@ function renderProjectFiles(project) {
         return;
     }
 
-    container.innerHTML = project.files.map(file => `
+    container.innerHTML = project.files.map(file => {
+        const fileUrl = file.url || `/uploads/projects/${project.id}/${file.filename}`;
+        return `
         <div class="file-item">
             <div class="file-preview">
                 ${file.type === 'image'
-                    ? `<img src="/uploads/projects/${project.id}/${file.filename}" alt="">`
-                    : '<i class="fas fa-file-pdf pdf-icon"></i>'
+                    ? `<img src="${fileUrl}" alt="">`
+                    : `<a href="${fileUrl}" target="_blank"><i class="fas fa-file-pdf pdf-icon"></i></a>`
                 }
             </div>
             <div class="file-info" title="${file.originalName}">
@@ -562,7 +564,7 @@ function renderProjectFiles(project) {
                 </button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 async function setCoverImage(fileId) {
@@ -672,6 +674,15 @@ function capitalizeFirst(str) {
 
 function getFileById(project, fileId) {
     return project.files?.find(f => f.id === fileId);
+}
+
+function getFileUrl(project, fileId) {
+    const file = getFileById(project, fileId);
+    if (!file) return null;
+    // Se tiver URL do Vercel Blob, usar diretamente
+    if (file.url) return file.url;
+    // Fallback para caminho local (desenvolvimento)
+    return `/uploads/projects/${project.id}/${file.filename}`;
 }
 
 // Expor funções globalmente para onclick

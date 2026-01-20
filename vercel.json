@@ -25,5 +25,64 @@
         }
       ]
     }
+  ],
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/auth/login",
+      "destination": "/api/auth/login"
+    },
+    {
+      "source": "/api/auth/me",
+      "destination": "/api/auth/me"
+    },
+    {
+      "source": "/api/auth/password",
+      "destination": "/api/auth/password"
+    },
+    {
+      "source": "/api/projects/categories",
+      "destination": "/api/projects/categories"
+    },
+    {
+      "source": "/api/projects/admin/all",
+      "destination": "/api/projects/admin/all"
+    },
+    {
+      "source": "/api/projects/admin/stats",
+      "destination": "/api/projects/admin/stats"
+    },
+    {
+      "source": "/api/projects/admin/order",
+      "destination": "/api/projects/admin/order"
+    },
+    {
+      "source": "/api/projects/:id/files/:fileId",
+      "destination": "/api/projects/[id]/files/[fileId]"
+    },
+    {
+      "source": "/api/projects/:id/files",
+      "destination": "/api/projects/[id]/files"
+    },
+    {
+      "source": "/api/projects/:id/cover/:fileId",
+      "destination": "/api/projects/[id]/cover/[fileId]"
+    },
+    {
+      "source": "/api/projects/:id",
+      "destination": "/api/projects/[id]"
+    },
+    {
+      "source": "/api/projects",
+      "destination": "/api/projects/index"
+    },
+    {
+      "source": "/api/health",
+      "destination": "/api/health"
+    }
   ]
 }
