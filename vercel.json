@@ -28,32 +28,16 @@
   ],
   "rewrites": [
     {
-      "source": "/api/auth/login",
-      "destination": "/api/auth/login"
-    },
-    {
-      "source": "/api/auth/me",
-      "destination": "/api/auth/me"
-    },
-    {
-      "source": "/api/auth/password",
-      "destination": "/api/auth/password"
+      "source": "/api/auth/:path*",
+      "destination": "/api/auth/[...path]"
     },
     {
       "source": "/api/projects/categories",
       "destination": "/api/projects/categories"
     },
     {
-      "source": "/api/projects/admin/all",
-      "destination": "/api/projects/admin/all"
-    },
-    {
-      "source": "/api/projects/admin/stats",
-      "destination": "/api/projects/admin/stats"
-    },
-    {
-      "source": "/api/projects/admin/order",
-      "destination": "/api/projects/admin/order"
+      "source": "/api/projects/admin/:path*",
+      "destination": "/api/projects/admin/[...path]"
     },
     {
       "source": "/api/projects/:id/files/:fileId",
