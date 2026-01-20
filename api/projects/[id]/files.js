@@ -1,20 +1,7 @@
-const { put } = require('@vercel/blob');
+const { uploadFile, getFileType, isAllowedType } = require('../../_lib/storage');
 const { getProjects, setProjects, generateId } = require('../../_lib/db');
 const { getTokenFromRequest, verifyToken } = require('../../_lib/auth');
 const { cors } = require('../../_lib/cors');
-
-// Tipos permitidos (imagens e PDFs)
-const ALLOWED_TYPES = {
-  'image/jpeg': 'image',
-  'image/png': 'image',
-  'image/webp': 'image',
-  'image/gif': 'image',
-  'application/pdf': 'document'
-};
-
-function getFileType(mimeType) {
-  return ALLOWED_TYPES[mimeType] || null;
-}
 
 async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -81,29 +68,25 @@ async function handler(req, res) {
           continue;
         }
 
-        const fileType = getFileType(file.type);
-        if (!fileType) {
+        if (!isAllowedType(file.type)) {
           continue;
         }
 
         // Decodificar base64
         const fileBuffer = Buffer.from(file.data, 'base64');
 
-        // Upload para Vercel Blob
-        const blob = await put(`projects/${projectId}/${Date.now()}-${file.name}`, fileBuffer, {
-          access: 'public',
-          contentType: file.type
-        });
+        // Upload para Cloudflare R2
+        const uploaded = await uploadFile(projectId, file.name, fileBuffer, file.type);
 
         const fileRecord = {
           id: generateId(),
           filename: file.name,
           originalName: file.name,
-          type: fileType,
+          type: uploaded.type,
           mimeType: file.type,
           size: fileBuffer.length,
-          url: blob.url,
-          path: blob.url,
+          url: uploaded.url,
+          key: uploaded.key,
           uploadedAt: new Date().toISOString()
         };
 
@@ -152,9 +135,8 @@ async function handler(req, res) {
 
         const filename = filenameMatch[1];
         const mimeType = contentTypeMatch[1].trim();
-        const fileType = getFileType(mimeType);
 
-        if (!fileType) continue;
+        if (!isAllowedType(mimeType)) continue;
 
         // Extrair dados do arquivo (após headers duplo CRLF)
         const headerEnd = part.indexOf('\r\n\r\n');
@@ -163,21 +145,18 @@ async function handler(req, res) {
         const fileData = part.slice(headerEnd + 4, part.lastIndexOf('\r\n'));
         const fileBuffer = Buffer.from(fileData, 'binary');
 
-        // Upload para Vercel Blob
-        const blob = await put(`projects/${projectId}/${Date.now()}-${filename}`, fileBuffer, {
-          access: 'public',
-          contentType: mimeType
-        });
+        // Upload para Cloudflare R2
+        const uploaded = await uploadFile(projectId, filename, fileBuffer, mimeType);
 
         const fileRecord = {
           id: generateId(),
           filename: filename,
           originalName: filename,
-          type: fileType,
+          type: uploaded.type,
           mimeType: mimeType,
           size: fileBuffer.length,
-          url: blob.url,
-          path: blob.url,
+          url: uploaded.url,
+          key: uploaded.key,
           uploadedAt: new Date().toISOString()
         };
 

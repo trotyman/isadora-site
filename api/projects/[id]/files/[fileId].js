@@ -1,4 +1,4 @@
-const { del } = require('@vercel/blob');
+const { deleteFile } = require('../../../_lib/storage');
 const { getProjects, setProjects } = require('../../../_lib/db');
 const { getTokenFromRequest, verifyToken } = require('../../../_lib/auth');
 const { cors } = require('../../../_lib/cors');
@@ -44,13 +44,13 @@ async function handler(req, res) {
 
     const file = project.files[fileIndex];
 
-    // Deletar do Vercel Blob se tiver URL
-    if (file.url && file.url.includes('blob.vercel-storage.com')) {
+    // Deletar do Cloudflare R2 se tiver key
+    if (file.key) {
       try {
-        await del(file.url);
-      } catch (blobError) {
-        console.error('Erro ao deletar do Blob:', blobError);
-        // Continuar mesmo se falhar a deleção do blob
+        await deleteFile(file.key);
+      } catch (r2Error) {
+        console.error('Erro ao deletar do R2:', r2Error);
+        // Continuar mesmo se falhar a deleção do R2
       }
     }
 
