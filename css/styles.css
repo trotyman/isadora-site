@@ -692,6 +692,13 @@ p:last-child {
     color: var(--color-gray-400);
 }
 
+/* Esconde scroll indicator em mobile para não sobrepor botões */
+@media (max-width: 768px) {
+    .scroll-indicator {
+        display: none;
+    }
+}
+
 .scroll-indicator span {
     font-size: 0.75rem;
     font-weight: 500;
