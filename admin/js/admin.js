@@ -207,11 +207,13 @@ async function loadRecentProjects() {
                 return;
             }
 
-            container.innerHTML = recent.map(project => `
+            container.innerHTML = recent.map(project => {
+                const thumbUrl = getProjectThumbUrl(project);
+                return `
                 <div class="project-list-item">
                     <div class="project-list-thumb">
-                        ${project.coverImage
-                            ? `<img src="${getFileUrl(project, project.coverImage)}" alt="">`
+                        ${thumbUrl
+                            ? `<img src="${thumbUrl}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><i class="fas fa-image" style="display:none;"></i>`
                             : '<i class="fas fa-image"></i>'
                         }
                     </div>
@@ -220,7 +222,7 @@ async function loadRecentProjects() {
                         <span>${capitalizeFirst(project.category)} • ${capitalizeFirst(project.status)}</span>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
     } catch (error) {
         console.error('Erro ao carregar projetos recentes:', error);
@@ -265,11 +267,13 @@ function renderProjects(projects) {
         return;
     }
 
-    container.innerHTML = projects.map(project => `
+    container.innerHTML = projects.map(project => {
+        const thumbUrl = getProjectThumbUrl(project);
+        return `
         <div class="project-card">
             <div class="project-cover">
-                ${project.coverImage
-                    ? `<img src="${getFileUrl(project, project.coverImage)}" alt="">`
+                ${thumbUrl
+                    ? `<img src="${thumbUrl}" alt="" onerror="this.style.display='none';">`
                     : '<i class="fas fa-image"></i>'
                 }
                 <span class="project-status-badge status-${project.status}">${capitalizeFirst(project.status)}</span>
@@ -280,7 +284,7 @@ function renderProjects(projects) {
                 <div class="project-meta">
                     ${project.location ? `<span><i class="fas fa-map-marker-alt"></i> ${project.location}</span>` : ''}
                     ${project.year ? `<span><i class="fas fa-calendar"></i> ${project.year}</span>` : ''}
-                    <span><i class="fas fa-images"></i> ${project.files.length} arquivos</span>
+                    <span><i class="fas fa-images"></i> ${project.files?.length || 0} arquivos</span>
                 </div>
                 <div class="project-actions">
                     <button class="btn btn-outline btn-sm" onclick="editProject('${project.id}')">
@@ -292,7 +296,7 @@ function renderProjects(projects) {
                 </div>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 async function loadCategories() {
@@ -676,9 +680,37 @@ function getFileById(project, fileId) {
     return project.files?.find(f => f.id === fileId);
 }
 
+function getProjectThumbUrl(project) {
+    // Tenta pegar a URL da capa definida
+    if (project.coverImage) {
+        const coverFile = getFileById(project, project.coverImage);
+        if (coverFile && coverFile.url) return coverFile.url;
+    }
+    
+    // Fallback: pega a primeira imagem do projeto
+    if (project.files && project.files.length > 0) {
+        const firstImage = project.files.find(f => f.type === 'image');
+        if (firstImage && firstImage.url) return firstImage.url;
+    }
+    
+    return null;
+}
+
 function getFileUrl(project, fileId) {
+    // Se fileId for null/undefined, tentar pegar primeira imagem
+    if (!fileId && project.files && project.files.length > 0) {
+        const firstImage = project.files.find(f => f.type === 'image');
+        if (firstImage && firstImage.url) return firstImage.url;
+    }
+    
     const file = getFileById(project, fileId);
-    if (!file) return null;
+    if (!file) {
+        // Fallback: tentar usar a URL diretamente se fileId parecer uma URL
+        if (fileId && (fileId.startsWith('http') || fileId.startsWith('/'))) {
+            return fileId;
+        }
+        return null;
+    }
     // Se tiver URL do R2, usar diretamente
     if (file.url) return file.url;
     // Fallback para caminho local (desenvolvimento)

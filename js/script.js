@@ -214,23 +214,34 @@ document.addEventListener('DOMContentLoaded', function() {
         startDepoimentoInterval();
     }
     
-    // ===== Portfolio Projects =====
+    // ===== Portfolio Projects (Carousel) =====
     function renderProjetos() {
         const container = document.getElementById('projetos-container');
         if (!container) return;
-        
-        fetch('/api/projects')
+
+        // Buscar projetos em destaque (featured=true) ou todos se não houver destaques
+        fetch('/api/projects?featured=true')
             .then(res => res.json())
+            .then(data => {
+                let projetos = data.projects || [];
+                
+                // Se não houver projetos em destaque, buscar todos
+                if (projetos.length === 0) {
+                    return fetch('/api/projects').then(res => res.json());
+                }
+                return { projects: projetos };
+            })
             .then(data => {
                 const projetos = data.projects || [];
                 container.innerHTML = '';
                 
                 if (projetos.length === 0) {
-                    container.innerHTML = '<p style="text-align:center;color:var(--color-gray-400);">Em breve novos projetos.</p>';
+                    container.innerHTML = '<p style="text-align:center;color:var(--color-gray-400);width:100%;">Em breve novos projetos.</p>';
                     return;
                 }
                 
-                projetos.slice(0, 6).forEach((proj, idx) => {
+                // Limitar a 8 projetos no carrossel
+                projetos.slice(0, 8).forEach((proj, idx) => {
                     // Pegar imagem de capa ou primeira imagem
                     const images = getProjectImages(proj);
                     const coverUrl = images[0] || '';
@@ -239,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const card = document.createElement('div');
                     card.className = 'portfolio-card';
                     card.setAttribute('data-animate', 'fadeUp');
-                    card.setAttribute('data-delay', (idx * 100).toString());
+                    card.setAttribute('data-delay', (idx * 50).toString());
                     card.setAttribute('tabindex', '0');
                     card.setAttribute('role', 'button');
                     card.setAttribute('aria-label', `Ver projeto ${proj.title}`);
@@ -267,6 +278,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 container.querySelectorAll('[data-animate]').forEach(el => {
                     animationObserver.observe(el);
                 });
+                
+                // Inicializar navegação do carrossel
+                initCarouselNav();
             })
             .catch(() => {
                 // Fallback: show placeholder cards
@@ -291,6 +305,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
             });
+    }
+    
+    // ===== Carousel Navigation =====
+    function initCarouselNav() {
+        const carousel = document.getElementById('projetos-container');
+        const prevBtn = document.getElementById('portfolio-prev');
+        const nextBtn = document.getElementById('portfolio-next');
+        
+        if (!carousel || !prevBtn || !nextBtn) return;
+        
+        const scrollAmount = 300; // pixels to scroll
+        
+        prevBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+        
+        // Keyboard navigation
+        carousel.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else if (e.key === 'ArrowRight') {
+                carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        });
     }
     
     // ===== Helper Functions =====

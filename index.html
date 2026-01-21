@@ -222,8 +222,16 @@
                         Uma seleção de trabalhos que representam minha abordagem e filosofia de design.
                     </p>
                 </div>
-                <div id="projetos-container" class="portfolio-grid">
-                    <!-- Projetos serão carregados via JavaScript -->
+                <div class="portfolio-carousel-wrapper" data-animate="fadeUp">
+                    <button class="carousel-nav carousel-prev" id="portfolio-prev" aria-label="Anterior">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="portfolio-carousel" id="projetos-container">
+                        <!-- Projetos serão carregados via JavaScript -->
+                    </div>
+                    <button class="carousel-nav carousel-next" id="portfolio-next" aria-label="Próximo">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
                 <div class="portfolio-cta" data-animate="fadeUp">
                     <a href="projetos.html" class="btn btn-secondary">Ver Todos os Projetos</a>
