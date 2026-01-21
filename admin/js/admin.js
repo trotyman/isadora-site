@@ -9,6 +9,13 @@ let authToken = localStorage.getItem('authToken');
 let currentUser = null;
 let currentProject = null;
 
+// Configuração de inatividade (em milissegundos)
+const INACTIVITY_TIMEOUT = 15 * 60 * 1000; // 15 minutos
+const VISIBILITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos quando aba não está visível
+let inactivityTimer = null;
+let visibilityTimer = null;
+let lastActivity = Date.now();
+
 // ========== INICIALIZAÇÃO ==========
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
@@ -20,6 +27,8 @@ async function initApp() {
         try {
             await validateToken();
             showDashboard();
+            // Iniciar monitoramento de inatividade
+            setupInactivityMonitor();
         } catch {
             logout();
         }
@@ -93,6 +102,7 @@ async function handleLogin(e) {
         localStorage.setItem('authToken', authToken);
 
         showDashboard();
+        setupInactivityMonitor(); // Iniciar monitoramento após login
         showToast('Login realizado com sucesso!', 'success');
     } catch (error) {
         errorEl.textContent = error.message;
@@ -112,11 +122,96 @@ async function validateToken() {
     currentUser = data.user;
 }
 
-function logout() {
+function logout(reason = null) {
+    // Parar monitoramento de inatividade
+    stopInactivityMonitor();
+    
     authToken = null;
     currentUser = null;
     localStorage.removeItem('authToken');
     showLogin();
+    
+    // Mostrar motivo do logout se houver
+    if (reason) {
+        showToast(reason, 'warning');
+    }
+}
+
+// ========== MONITORAMENTO DE INATIVIDADE ==========
+function setupInactivityMonitor() {
+    // Resetar timer a cada atividade do usuário
+    const activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
+    
+    activityEvents.forEach(event => {
+        document.addEventListener(event, resetInactivityTimer, { passive: true });
+    });
+    
+    // Monitorar visibilidade da aba
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Iniciar timer
+    resetInactivityTimer();
+}
+
+function stopInactivityMonitor() {
+    // Limpar timers
+    if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = null;
+    }
+    if (visibilityTimer) {
+        clearTimeout(visibilityTimer);
+        visibilityTimer = null;
+    }
+    
+    // Remover event listeners
+    const activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
+    activityEvents.forEach(event => {
+        document.removeEventListener(event, resetInactivityTimer);
+    });
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+}
+
+function resetInactivityTimer() {
+    lastActivity = Date.now();
+    
+    // Limpar timer anterior
+    if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+    }
+    
+    // Apenas configurar timer se estiver logado
+    if (authToken) {
+        inactivityTimer = setTimeout(() => {
+            logout('Sessão encerrada por inatividade');
+        }, INACTIVITY_TIMEOUT);
+    }
+}
+
+function handleVisibilityChange() {
+    if (!authToken) return;
+    
+    if (document.hidden) {
+        // Aba ficou oculta - iniciar timer de visibilidade
+        visibilityTimer = setTimeout(() => {
+            logout('Sessão encerrada por ausência');
+        }, VISIBILITY_TIMEOUT);
+    } else {
+        // Aba voltou a ficar visível - cancelar timer de visibilidade
+        if (visibilityTimer) {
+            clearTimeout(visibilityTimer);
+            visibilityTimer = null;
+        }
+        
+        // Verificar se o tempo de inatividade total não excedeu
+        const timeSinceLastActivity = Date.now() - lastActivity;
+        if (timeSinceLastActivity >= INACTIVITY_TIMEOUT) {
+            logout('Sessão encerrada por inatividade');
+        } else {
+            // Resetar o timer de inatividade
+            resetInactivityTimer();
+        }
+    }
 }
 
 // ========== NAVEGAÇÃO ==========
