@@ -329,30 +329,45 @@ document.addEventListener('DOMContentLoaded', function() {
     // Modal Navigation
     const prevBtn = document.getElementById('modal-prev-img');
     const nextBtn = document.getElementById('modal-next-img');
+    const prevBtnMobile = document.getElementById('modal-prev-mobile');
+    const nextBtnMobile = document.getElementById('modal-next-mobile');
     const closeModalBtn = document.getElementById('close-modal-projeto');
     const modalBg = document.getElementById('modal-projeto-bg');
     
+    function goToPrevImage() {
+        if (galeriaImgs.length > 0) {
+            galeriaIdx = (galeriaIdx - 1 + galeriaImgs.length) % galeriaImgs.length;
+            renderModalImg();
+        }
+    }
+    
+    function goToNextImage() {
+        if (galeriaImgs.length > 0) {
+            galeriaIdx = (galeriaIdx + 1) % galeriaImgs.length;
+            renderModalImg();
+        }
+    }
+    
     if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            if (galeriaImgs.length > 0) {
-                galeriaIdx = (galeriaIdx - 1 + galeriaImgs.length) % galeriaImgs.length;
-                renderModalImg();
-            }
-        });
+        prevBtn.addEventListener('click', goToPrevImage);
     }
     
     if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            if (galeriaImgs.length > 0) {
-                galeriaIdx = (galeriaIdx + 1) % galeriaImgs.length;
-                renderModalImg();
-            }
-        });
+        nextBtn.addEventListener('click', goToNextImage);
+    }
+    
+    if (prevBtnMobile) {
+        prevBtnMobile.addEventListener('click', goToPrevImage);
+    }
+    
+    if (nextBtnMobile) {
+        nextBtnMobile.addEventListener('click', goToNextImage);
     }
     
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', () => {
             modalBg.classList.add('hidden');
+            modalBg.classList.remove('active');
             document.body.style.overflow = '';
         });
     }
@@ -361,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalBg.addEventListener('click', (e) => {
             if (e.target === modalBg) {
                 modalBg.classList.add('hidden');
+                modalBg.classList.remove('active');
                 document.body.style.overflow = '';
             }
         });
@@ -371,13 +387,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (modalBg && !modalBg.classList.contains('hidden')) {
             if (e.key === 'Escape') {
                 modalBg.classList.add('hidden');
+                modalBg.classList.remove('active');
                 document.body.style.overflow = '';
-            } else if (e.key === 'ArrowLeft' && galeriaImgs.length > 0) {
-                galeriaIdx = (galeriaIdx - 1 + galeriaImgs.length) % galeriaImgs.length;
-                renderModalImg();
-            } else if (e.key === 'ArrowRight' && galeriaImgs.length > 0) {
-                galeriaIdx = (galeriaIdx + 1) % galeriaImgs.length;
-                renderModalImg();
+            } else if (e.key === 'ArrowLeft') {
+                goToPrevImage();
+            } else if (e.key === 'ArrowRight') {
+                goToNextImage();
             }
         }
     });

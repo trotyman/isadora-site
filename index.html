@@ -360,14 +360,25 @@
         <div class="modal-content">
             <h2 id="modal-projeto-title" class="modal-title"></h2>
             <div class="modal-gallery-wrapper">
-                <button id="modal-prev-img" class="modal-nav modal-nav-prev" aria-label="Anterior">
+                <!-- Desktop navigation (hidden on mobile via CSS) -->
+                <button id="modal-prev-img" class="modal-nav modal-nav-prev desktop-only" aria-label="Anterior">
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <div id="modal-projeto-galeria" class="modal-gallery"></div>
-                <button id="modal-next-img" class="modal-nav modal-nav-next" aria-label="Próxima">
+                <button id="modal-next-img" class="modal-nav modal-nav-next desktop-only" aria-label="Próxima">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
+            <!-- Mobile navigation (shown below on mobile) -->
+            <div class="modal-mobile-nav">
+                <button id="modal-prev-mobile" class="modal-nav" aria-label="Anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="modal-next-mobile" class="modal-nav" aria-label="Próxima">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <p class="swipe-hint">Arraste para navegar</p>
         </div>
     </div>
 

@@ -895,10 +895,11 @@ p:last-child {
 }
 
 /* ===== Portfolio Carousel ===== */
+/* ===== Portfolio Carousel ===== */
 .portfolio-carousel-wrapper {
     position: relative;
     margin-bottom: var(--space-2xl);
-    padding: 0 60px;
+    padding: 0;
 }
 
 .portfolio-carousel {
@@ -908,7 +909,13 @@ p:last-child {
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding: var(--space-sm) 0;
+    padding: var(--space-sm) var(--space-lg);
+    justify-content: center;
+}
+
+/* Quando há overflow (mais projetos), alinha à esquerda */
+.portfolio-carousel.has-overflow {
+    justify-content: flex-start;
 }
 
 .portfolio-carousel::-webkit-scrollbar {
@@ -919,42 +926,45 @@ p:last-child {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
-    display: flex;
+    width: 32px;
+    height: 32px;
+    display: none; /* Hidden by default, shown via JS when needed */
     align-items: center;
     justify-content: center;
-    background: var(--color-white);
-    color: var(--color-dark);
-    border: 1px solid var(--color-gray-200);
+    background: transparent;
+    color: var(--color-gray-500);
+    border: none;
     border-radius: var(--radius-full);
-    font-size: 1rem;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: var(--transition-fast);
     z-index: 10;
-    box-shadow: var(--shadow-sm);
+    opacity: 0.7;
 }
 
 .carousel-nav:hover {
-    background: var(--color-primary);
-    color: var(--color-white);
-    border-color: var(--color-primary);
+    color: var(--color-primary);
+    opacity: 1;
 }
 
-.carousel-prev { left: 0; }
-.carousel-next { right: 0; }
+.carousel-nav.visible {
+    display: flex;
+}
+
+.carousel-prev { left: 4px; }
+.carousel-next { right: 4px; }
 
 @media (max-width: 768px) {
-    .portfolio-carousel-wrapper {
-        padding: 0 10px;
+    .portfolio-carousel {
+        padding: var(--space-sm);
     }
     .carousel-nav {
-        width: 36px;
-        height: 36px;
-        font-size: 0.85rem;
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
     }
-    .carousel-prev { left: -5px; }
-    .carousel-next { right: -5px; }
+    .carousel-prev { left: 2px; }
+    .carousel-next { right: 2px; }
 }
 
 /* ===== Portfolio Card (Carousel) ===== */
@@ -1337,6 +1347,10 @@ p:last-child {
     max-width: 1000px;
     padding: var(--space-lg);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-title {
@@ -1351,6 +1365,8 @@ p:last-child {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    max-width: 900px;
 }
 
 .modal-gallery {
@@ -1358,6 +1374,8 @@ p:last-child {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+}
 }
 
 .modal-gallery img {
@@ -1441,39 +1459,87 @@ p:last-child {
     margin-top: var(--space-md);
 }
 
+/* Modal Gallery Navigation - Desktop */
 .modal-nav {
-    position: absolute;
+    position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-primary);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--color-white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--radius-full);
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: var(--transition-fast);
-    z-index: 5;
+    z-index: 1005;
+    backdrop-filter: blur(4px);
 }
 
 .modal-nav:hover {
-    transform: translateY(-50%) scale(1.1);
-    background: var(--color-primary-dark);
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: translateY(-50%) scale(1.05);
 }
 
-.modal-nav-prev { left: var(--space-lg); }
-.modal-nav-next { right: var(--space-lg); }
+.modal-nav-prev { left: 24px; }
+.modal-nav-next { right: 24px; }
+
+/* Mobile Gallery Navigation - Below content */
+@media (max-width: 768px) {
+    .modal-gallery-wrapper {
+        flex-direction: column;
+    }
+    
+    /* Hide desktop nav buttons on mobile */
+    .modal-nav.desktop-only {
+        display: none;
+    }
+    
+    .modal-mobile-nav {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-lg);
+        margin-top: var(--space-lg);
+        padding: var(--space-sm) 0;
+    }
+    
+    .modal-mobile-nav .modal-nav {
+        position: relative;
+        top: auto;
+        transform: none;
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .modal-mobile-nav .modal-nav:hover {
+        transform: scale(1.05);
+    }
+}
+
+@media (min-width: 769px) {
+    .modal-mobile-nav {
+        display: none;
+    }
+}
+
+/* Swipe hint for mobile */
+.swipe-hint {
+    display: none;
+    color: var(--color-gray-400);
+    font-size: 0.75rem;
+    text-align: center;
+    margin-top: var(--space-sm);
+}
 
 @media (max-width: 768px) {
-    .modal-nav {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+    .swipe-hint {
+        display: block;
     }
-    .modal-nav-prev { left: var(--space-sm); }
-    .modal-nav-next { right: var(--space-sm); }
 }
 
 /* ===== Popup Form ===== */
