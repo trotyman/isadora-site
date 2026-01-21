@@ -1,11 +1,11 @@
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, DeleteObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 
 // Configuração do Cloudflare R2
 const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID;
 const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
 const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
 const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'isadora-uploads';
-const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL; // URL pública do bucket
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || 'https://pub-c223da626df34d90984474e07d938a70.r2.dev';
 
 // Cliente S3 configurado para R2
 const s3Client = new S3Client({
@@ -15,6 +15,9 @@ const s3Client = new S3Client({
     accessKeyId: R2_ACCESS_KEY_ID,
     secretAccessKey: R2_SECRET_ACCESS_KEY,
   },
+  // IMPORTANTE: Necessário para SDK v3.729.0+ (evita erros de checksum)
+  requestChecksumCalculation: 'WHEN_REQUIRED',
+  responseChecksumValidation: 'WHEN_REQUIRED',
 });
 
 // Tipos de arquivo permitidos
@@ -97,11 +100,26 @@ function getKeyFromUrl(url) {
   return null;
 }
 
+// Função para testar conexão com R2
+async function testConnection() {
+  try {
+    const result = await s3Client.send(
+      new ListObjectsV2Command({ Bucket: R2_BUCKET_NAME, MaxKeys: 1 })
+    );
+    console.log('R2 conexão OK. Objetos:', result.Contents?.length || 0);
+    return { success: true, objects: result.Contents?.length || 0 };
+  } catch (error) {
+    console.error('Erro de conexão R2:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   uploadFile,
   deleteFile,
   getFileType,
   isAllowedType,
   getKeyFromUrl,
+  testConnection,
   ALLOWED_TYPES
 };

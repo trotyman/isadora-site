@@ -679,7 +679,7 @@ function getFileById(project, fileId) {
 function getFileUrl(project, fileId) {
     const file = getFileById(project, fileId);
     if (!file) return null;
-    // Se tiver URL do Vercel Blob, usar diretamente
+    // Se tiver URL do R2, usar diretamente
     if (file.url) return file.url;
     // Fallback para caminho local (desenvolvimento)
     return `/uploads/projects/${project.id}/${file.filename}`;
