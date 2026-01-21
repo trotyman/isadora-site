@@ -219,26 +219,36 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('projetos-container');
         if (!container) return;
         
-        fetch('/api/list_projects')
+        fetch('/api/projects')
             .then(res => res.json())
             .then(data => {
                 const projetos = data.projects || [];
                 container.innerHTML = '';
                 
+                if (projetos.length === 0) {
+                    container.innerHTML = '<p style="text-align:center;color:var(--color-gray-400);">Em breve novos projetos.</p>';
+                    return;
+                }
+                
                 projetos.slice(0, 6).forEach((proj, idx) => {
+                    // Pegar imagem de capa ou primeira imagem
+                    const images = getProjectImages(proj);
+                    const coverUrl = images[0] || '';
+                    const categoryLabel = getCategoryLabel(proj.category);
+                    
                     const card = document.createElement('div');
                     card.className = 'portfolio-card';
                     card.setAttribute('data-animate', 'fadeUp');
                     card.setAttribute('data-delay', (idx * 100).toString());
                     card.setAttribute('tabindex', '0');
                     card.setAttribute('role', 'button');
-                    card.setAttribute('aria-label', `Ver projeto ${proj.name}`);
+                    card.setAttribute('aria-label', `Ver projeto ${proj.title}`);
                     
                     card.innerHTML = `
-                        <img src="${proj.images[0] || ''}" alt="${proj.name}" onerror="this.style.display='none'">
-                        <div class="portfolio-card-overlay">
-                            <h3 class="portfolio-card-title">${proj.name.replace(/_/g, ' ')}</h3>
-                            <span class="portfolio-card-category">Arquitetura</span>
+                        ${coverUrl ? `<img src="${coverUrl}" alt="${proj.title}" onerror="this.style.display='none'">` : ''}
+                        <div class="portfolio-card-overlay"${!coverUrl ? ' style="opacity:1;"' : ''}>
+                            <h3 class="portfolio-card-title">${proj.title}</h3>
+                            <span class="portfolio-card-category">${categoryLabel}</span>
                         </div>
                     `;
                     
@@ -283,18 +293,50 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
     
+    // ===== Helper Functions =====
+    function getProjectImages(proj) {
+        // Retorna array de URLs de imagens do projeto
+        if (!proj.files || proj.files.length === 0) return [];
+        
+        // Filtrar apenas imagens (não PDFs)
+        const imageFiles = proj.files.filter(f => f.type === 'image');
+        
+        // Ordenar: capa primeiro, depois por ordem
+        imageFiles.sort((a, b) => {
+            if (a.id === proj.coverImage) return -1;
+            if (b.id === proj.coverImage) return 1;
+            return (a.order || 0) - (b.order || 0);
+        });
+        
+        return imageFiles.map(f => f.url);
+    }
+    
+    function getCategoryLabel(category) {
+        const labels = {
+            'residencial': 'Arquitetura Residencial',
+            'interiores': 'Design de Interiores',
+            'comercial': 'Comercial'
+        };
+        return labels[category] || 'Arquitetura';
+    }
+    
     // ===== Modal Gallery =====
     let galeriaImgs = [];
     let galeriaIdx = 0;
+    let currentProj = null;
     
     function openProjetoModal(proj) {
-        galeriaImgs = proj.images;
+        currentProj = proj;
+        galeriaImgs = getProjectImages(proj);
         galeriaIdx = 0;
         
         const modal = document.getElementById('modal-projeto-bg');
         const title = document.getElementById('modal-projeto-title');
+        const descEl = document.getElementById('modal-projeto-desc');
         
-        title.textContent = proj.name.replace(/_/g, ' ');
+        title.textContent = proj.title;
+        if (descEl) descEl.textContent = proj.description || '';
+        
         renderModalImg();
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';

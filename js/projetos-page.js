@@ -86,6 +86,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // ===== Helper Functions =====
+    function getProjectImages(proj) {
+        if (!proj.files || proj.files.length === 0) return [];
+        
+        const imageFiles = proj.files.filter(f => f.type === 'image');
+        
+        imageFiles.sort((a, b) => {
+            if (a.id === proj.coverImage) return -1;
+            if (b.id === proj.coverImage) return 1;
+            return (a.order || 0) - (b.order || 0);
+        });
+        
+        return imageFiles.map(f => f.url);
+    }
+    
     // ===== Load Projects =====
     function renderProjetos() {
         const container = document.getElementById('projetos-lista');
@@ -98,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        fetch('/api/list_projects')
+        fetch('/api/projects')
             .then(res => res.json())
             .then(data => {
                 const projetos = data.projects || [];
@@ -116,10 +131,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 projetos.forEach((proj, idx) => {
-                    const categories = ['residencial', 'interiores', 'comercial'];
-                    const category = categories[idx % categories.length];
-                    
-                    const description = generateDescription(proj.name, category);
+                    const category = proj.category || 'residencial';
+                    const images = getProjectImages(proj);
+                    const coverUrl = images[0] || '';
+                    const description = proj.description || generateDescription(proj.title, category);
                     
                     const item = document.createElement('article');
                     item.className = 'projeto-item';
@@ -127,20 +142,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     item.setAttribute('data-category', category);
                     item.setAttribute('tabindex', '0');
                     item.setAttribute('role', 'button');
-                    item.setAttribute('aria-label', `Ver projeto ${proj.name}`);
+                    item.setAttribute('aria-label', `Ver projeto ${proj.title}`);
                     
                     item.innerHTML = `
-                        <div class="projeto-image-wrapper ${!proj.images[0] ? 'no-image' : ''}">
-                            ${proj.images[0] ? `<img src="${proj.images[0]}" alt="${proj.name}" class="projeto-image" onerror="this.parentElement.classList.add('no-image');this.remove();">` : ''}
+                        <div class="projeto-image-wrapper ${!coverUrl ? 'no-image' : ''}">
+                            ${coverUrl ? `<img src="${coverUrl}" alt="${proj.title}" class="projeto-image" onerror="this.parentElement.classList.add('no-image');this.remove();">` : ''}
                         </div>
                         <div class="projeto-info">
                             <span class="projeto-category">${getCategoryLabel(category)}</span>
-                            <h2 class="projeto-title">${formatName(proj.name)}</h2>
+                            <h2 class="projeto-title">${proj.title}</h2>
                             <p class="projeto-description">${description}</p>
                             <div class="projeto-meta">
                                 <span class="projeto-meta-item">
                                     <i class="fas fa-images"></i>
-                                    ${proj.images.length} fotos
+                                    ${images.length} fotos
                                 </span>
                             </div>
                             <span class="projeto-cta">
@@ -149,11 +164,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     `;
                     
-                    item.addEventListener('click', () => openProjetoModal(proj, description));
+                    // Passar o projeto com as imagens processadas
+                    const projWithImages = { ...proj, images };
+                    item.addEventListener('click', () => openProjetoModal(projWithImages, description));
                     item.addEventListener('keydown', (e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
-                            openProjetoModal(proj, description);
+                            openProjetoModal(projWithImages, description);
                         }
                     });
                     
@@ -167,7 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }, 100);
             })
-            .catch(() => {
+            .catch((err) => {
+                console.error('Erro ao carregar projetos:', err);
                 // Fallback with example projects
                 container.innerHTML = '';
                 const exampleProjects = [
@@ -210,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function formatName(name) {
-        return name.replace(/_/g, ' ');
+        return (name || '').replace(/_/g, ' ');
     }
     
     function getCategoryLabel(category) {
@@ -222,13 +240,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return labels[category] || 'Arquitetura';
     }
     
-    function generateDescription(name, category) {
+    function generateDescription(title, category) {
+        const name = formatName(title).toLowerCase();
         const descriptions = {
-            'residencial': `Projeto residencial ${formatName(name).toLowerCase()}, desenvolvido com foco na integração dos ambientes e aproveitamento da luz natural, criando espaços acolhedores e funcionais para o dia a dia.`,
-            'interiores': `Design de interiores para ${formatName(name).toLowerCase()}, onde cada elemento foi cuidadosamente selecionado para criar uma atmosfera única e personalizada.`,
-            'comercial': `Espaço comercial ${formatName(name).toLowerCase()}, projetado para otimizar o fluxo de trabalho e proporcionar uma experiência diferenciada aos visitantes.`
+            'residencial': `Projeto residencial ${name}, desenvolvido com foco na integração dos ambientes e aproveitamento da luz natural, criando espaços acolhedores e funcionais para o dia a dia.`,
+            'interiores': `Design de interiores para ${name}, onde cada elemento foi cuidadosamente selecionado para criar uma atmosfera única e personalizada.`,
+            'comercial': `Espaço comercial ${name}, projetado para otimizar o fluxo de trabalho e proporcionar uma experiência diferenciada aos visitantes.`
         };
-        return descriptions[category] || `Projeto ${formatName(name).toLowerCase()}, desenvolvido com atenção aos detalhes e soluções personalizadas.`;
+        return descriptions[category] || `Projeto ${name}, desenvolvido com atenção aos detalhes e soluções personalizadas.`;
     }
     
     // ===== Modal Gallery =====
@@ -237,6 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let galeriaDesc = '';
     
     function openProjetoModal(proj, description) {
+        // proj.images já vem processado do renderProjetos
         galeriaImgs = proj.images || [];
         galeriaIdx = 0;
         galeriaDesc = description;
@@ -245,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const title = document.getElementById('modal-projeto-title');
         const descEl = document.getElementById('modal-projeto-desc');
         
-        title.textContent = formatName(proj.name);
+        title.textContent = proj.title || formatName(proj.name);
         if (descEl) descEl.textContent = description;
         
         renderModalImg();
