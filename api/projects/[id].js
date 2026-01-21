@@ -1,6 +1,7 @@
 const { getProjects, setProjects, generateSlug } = require('../_lib/db');
 const { getTokenFromRequest, verifyToken } = require('../_lib/auth');
 const { cors } = require('../_lib/cors');
+const { deleteFile, getKeyFromUrl } = require('../_lib/storage');
 
 async function handleGet(req, res, projectId) {
   try {
@@ -110,12 +111,33 @@ async function handleDelete(req, res, projectId) {
       });
     }
 
+    const project = projects[index];
+
+    // Deletar todos os arquivos do projeto no R2
+    if (project.files && project.files.length > 0) {
+      console.log(`Deletando ${project.files.length} arquivo(s) do R2 para projeto ${projectId}`);
+      
+      const deletePromises = project.files.map(async (file) => {
+        // Tenta pegar a key do arquivo
+        const key = file.key || getKeyFromUrl(file.url);
+        if (key) {
+          const deleted = await deleteFile(key);
+          console.log(`Arquivo ${key}: ${deleted ? 'deletado' : 'falhou'}`);
+          return deleted;
+        }
+        return false;
+      });
+
+      await Promise.all(deletePromises);
+    }
+
+    // Remover projeto do banco de dados
     projects.splice(index, 1);
     await setProjects(projects);
 
     return res.status(200).json({
       success: true,
-      message: 'Projeto excluído com sucesso'
+      message: 'Projeto e arquivos excluídos com sucesso'
     });
   } catch (error) {
     console.error('Erro ao excluir projeto:', error);
