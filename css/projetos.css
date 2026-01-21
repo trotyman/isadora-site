@@ -154,6 +154,19 @@
     height: 100%;
     object-fit: cover;
     transition: var(--transition-slow);
+    pointer-events: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+.projeto-image-wrapper {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .projeto-item:hover .projeto-image {

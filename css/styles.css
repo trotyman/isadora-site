@@ -915,6 +915,19 @@ p:last-child {
     height: 100%;
     object-fit: cover;
     transition: var(--transition-slow);
+    pointer-events: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+.portfolio-card {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .portfolio-card:hover img {
@@ -1293,6 +1306,74 @@ p:last-child {
     max-width: 100%;
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-xl);
+}
+
+/* ===== Image Protection & Watermark ===== */
+.protected-image-container {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.protected-image-container img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+/* Watermark overlay */
+.watermark-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 200px,
+        rgba(204, 138, 122, 0.03) 200px,
+        rgba(204, 138, 122, 0.03) 400px
+    );
+}
+
+.watermark-logo {
+    width: 35%;
+    max-width: 300px;
+    min-width: 120px;
+    height: auto;
+    opacity: 0.25;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+}
+
+/* Multiple watermarks pattern */
+.watermark-pattern {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9;
+    background-image: url('../assets/logo-simbolo.svg');
+    background-repeat: repeat;
+    background-size: 80px;
+    opacity: 0.08;
+    transform: rotate(-15deg) scale(1.5);
+}
+
+/* Transparent overlay to block right-click on exact image position */
+.image-protection-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 11;
+    cursor: default;
 }
 
 .modal-gallery .image-counter {

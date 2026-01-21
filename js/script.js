@@ -339,7 +339,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         renderModalImg();
         modal.classList.remove('hidden');
+        modal.classList.add('active');
         document.body.style.overflow = 'hidden';
+        
+        // Aplica proteção de imagem após modal abrir
+        setTimeout(() => {
+            if (window.ImageProtection) {
+                window.ImageProtection.protectAllImages();
+            }
+        }, 100);
     }
     
     function renderModalImg() {
@@ -358,10 +366,16 @@ document.addEventListener('DOMContentLoaded', function() {
             img.src = galeriaImgs[galeriaIdx];
             img.alt = '';
             img.style.display = 'none';
+            img.draggable = false;
             
             img.onload = function() {
                 spinner.remove();
                 img.style.display = 'block';
+                
+                // Aplica proteção após carregar
+                if (window.ImageProtection) {
+                    window.ImageProtection.protectAllImages();
+                }
             };
             
             img.onerror = function() {
