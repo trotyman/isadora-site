@@ -149,6 +149,25 @@ async function handlePassword(req, res) {
       });
     }
 
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    users[userIndex].password = hashedPassword;
+    users[userIndex].updatedAt = new Date().toISOString();
+
+    await setUsers(users);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Senha alterada com sucesso'
+    });
+  } catch (error) {
+    console.error('Erro ao alterar senha:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Erro interno do servidor'
+    });
+  }
+}
+
 // GET /api/auth/init - Inicializa o usuário admin
 async function handleInit(req, res) {
   try {
@@ -187,25 +206,6 @@ async function handleInit(req, res) {
     return res.status(500).json({
       success: false,
       message: 'Erro ao inicializar: ' + error.message
-    });
-  }
-}
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    users[userIndex].password = hashedPassword;
-    users[userIndex].updatedAt = new Date().toISOString();
-
-    await setUsers(users);
-
-    return res.status(200).json({
-      success: true,
-      message: 'Senha alterada com sucesso'
-    });
-  } catch (error) {
-    console.error('Erro ao alterar senha:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Erro interno do servidor'
     });
   }
 }
