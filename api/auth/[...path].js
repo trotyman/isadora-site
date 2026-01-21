@@ -149,6 +149,48 @@ async function handlePassword(req, res) {
       });
     }
 
+// GET /api/auth/init - Inicializa o usuário admin
+async function handleInit(req, res) {
+  try {
+    let users = await getUsers();
+    
+    if (users.length > 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'Usuário admin já existe',
+        username: 'isadora'
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+    const defaultUser = {
+      id: generateId(),
+      username: 'isadora',
+      password: hashedPassword,
+      name: 'Isadora Carvalho',
+      role: 'admin',
+      createdAt: new Date().toISOString()
+    };
+    
+    users.push(defaultUser);
+    await setUsers(users);
+
+    return res.status(201).json({
+      success: true,
+      message: 'Usuário admin criado com sucesso!',
+      username: 'isadora',
+      defaultPassword: 'admin123',
+      note: 'IMPORTANTE: Troque a senha após o primeiro login!'
+    });
+  } catch (error) {
+    console.error('Erro ao inicializar usuário:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Erro ao inicializar: ' + error.message
+    });
+  }
+}
+
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     users[userIndex].password = hashedPassword;
     users[userIndex].updatedAt = new Date().toISOString();
@@ -179,6 +221,8 @@ async function handler(req, res) {
       return authMiddleware(handleMe)(req, res);
     case 'password':
       return authMiddleware(handlePassword)(req, res);
+    case 'init':
+      return handleInit(req, res);
     default:
       return res.status(404).json({ success: false, message: 'Rota não encontrada' });
   }

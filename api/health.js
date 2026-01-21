@@ -20,7 +20,8 @@ async function handler(req, res) {
     timestamp: new Date().toISOString(),
     environment: {
       r2Configured: !!(process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY),
-      kvConfigured: !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN)
+      kvConfigured: !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN),
+      jwtConfigured: !!process.env.JWT_SECRET
     },
     ...(r2Status && { r2: r2Status })
   });
