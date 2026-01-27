@@ -50,16 +50,25 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
-            
+
             if (targetElement) {
                 const headerOffset = 80;
                 const elementPosition = targetElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.scrollY - headerOffset;
-                
+
                 window.scrollTo({
                     top: offsetPosition,
                     behavior: 'smooth'
                 });
+
+                // Limpar hash da URL se for o início
+                if (targetId === '#inicio') {
+                    // Usa replaceState para limpar o hash sem recarregar a página
+                    history.replaceState(null, null, window.location.pathname);
+                } else {
+                    // Atualizar o hash na URL para outras seções
+                    history.replaceState(null, null, targetId);
+                }
             }
         });
     });
