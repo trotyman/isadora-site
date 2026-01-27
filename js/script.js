@@ -61,14 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     behavior: 'smooth'
                 });
 
-                // Limpar hash da URL se for o início
-                if (targetId === '#inicio') {
-                    // Usa replaceState para limpar o hash sem recarregar a página
-                    history.replaceState(null, null, window.location.pathname);
-                } else {
-                    // Atualizar o hash na URL para outras seções
-                    history.replaceState(null, null, targetId);
-                }
+                // Sempre limpar o hash da URL para manter limpo
+                history.replaceState(null, null, window.location.pathname);
             }
         });
     });
