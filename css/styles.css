@@ -278,7 +278,7 @@ p:last-child {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-sm) var(--space-lg);
+    padding: var(--space-md) var(--space-lg);
     max-width: 1440px;
     margin: 0 auto;
 }
@@ -551,7 +551,7 @@ p:last-child {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: calc(80px + var(--space-2xl)) var(--space-lg) var(--space-xl);
+    padding: calc(80px + var(--space-lg)) var(--space-lg) var(--space-xl);
     position: relative;
     z-index: 1;
 }
