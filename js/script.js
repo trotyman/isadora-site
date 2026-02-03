@@ -3,6 +3,20 @@
  * Main JavaScript - Enhanced Interactions
  */
 
+// ===== Watermark URL Helper =====
+// Converte URL do R2 para usar a API de watermark (público)
+const R2_PUBLIC_BASE = 'https://pub-c223da626df34d90984474e07d938a70.r2.dev';
+
+function getWatermarkedUrl(originalUrl) {
+    if (!originalUrl) return '';
+    // Se a URL é do R2, converte para passar pela API de watermark
+    if (originalUrl.includes(R2_PUBLIC_BASE)) {
+        const path = originalUrl.replace(R2_PUBLIC_BASE + '/', '');
+        return `/api/image/${path}`;
+    }
+    return originalUrl;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     
     // ===== Header Scroll Effect =====
@@ -247,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 projetos.slice(0, 8).forEach((proj, idx) => {
                     // Pegar imagem de capa ou primeira imagem
                     const images = getProjectImages(proj);
-                    const coverUrl = images[0] || '';
+                    const coverUrl = getWatermarkedUrl(images[0] || '');
                     const categoryLabel = getCategoryLabel(proj.category);
                     
                     const card = document.createElement('div');
@@ -259,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     card.setAttribute('aria-label', `Ver projeto ${proj.title}`);
                     
                     card.innerHTML = `
-                        ${coverUrl ? `<img src="${coverUrl}" alt="${proj.title}" onerror="this.style.display='none'">` : ''}
+                        ${coverUrl ? `<div class="portfolio-card-image" style="background-image: url('${coverUrl}')" data-src="${coverUrl}"></div><div class="image-protection-layer"></div>` : ''}
                         <div class="portfolio-card-overlay"${!coverUrl ? ' style="opacity:1;"' : ''}>
                             <h3 class="portfolio-card-title">${proj.title}</h3>
                             <span class="portfolio-card-category">${categoryLabel}</span>
@@ -422,22 +436,49 @@ document.addEventListener('DOMContentLoaded', function() {
         galeria.innerHTML = '';
         
         if (galeriaImgs.length > 0) {
+            // URL com watermark para exibição pública
+            const imgUrl = getWatermarkedUrl(galeriaImgs[galeriaIdx]);
+            
             // Spinner
             const spinner = document.createElement('div');
             spinner.className = 'spinner';
             spinner.style.margin = '100px auto';
             galeria.appendChild(spinner);
             
-            // Image
-            const img = document.createElement('img');
-            img.src = galeriaImgs[galeriaIdx];
-            img.alt = '';
-            img.style.display = 'none';
-            img.draggable = false;
-            
-            img.onload = function() {
+            // Preload image to check if it loads
+            const preloadImg = new Image();
+            preloadImg.onload = function() {
                 spinner.remove();
-                img.style.display = 'block';
+                
+                // Create protected image container
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'modal-image-protected';
+                imgContainer.style.backgroundImage = `url('${imgUrl}')`;
+                imgContainer.setAttribute('data-src', imgUrl);
+                
+                // Protection layer
+                const protectionLayer = document.createElement('div');
+                protectionLayer.className = 'image-protection-layer';
+                imgContainer.appendChild(protectionLayer);
+                
+                // Watermark overlay
+                const watermark = document.createElement('div');
+                watermark.className = 'watermark-overlay';
+                watermark.innerHTML = '<img src="/assets/logo-completa.svg" alt="" class="watermark-logo" draggable="false">';
+                imgContainer.appendChild(watermark);
+                
+                // Watermark pattern
+                const pattern = document.createElement('div');
+                pattern.className = 'watermark-pattern';
+                imgContainer.appendChild(pattern);
+                
+                galeria.appendChild(imgContainer);
+                
+                // Counter
+                const counter = document.createElement('div');
+                counter.className = 'image-counter';
+                counter.textContent = `${galeriaIdx + 1} / ${galeriaImgs.length}`;
+                galeria.appendChild(counter);
                 
                 // Aplica proteção após carregar
                 if (window.ImageProtection) {
@@ -445,18 +486,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
             
-            img.onerror = function() {
+            preloadImg.onerror = function() {
                 spinner.remove();
                 galeria.innerHTML = '<p style="color: var(--color-gray-400);">Erro ao carregar imagem.</p>';
             };
             
-            galeria.appendChild(img);
-            
-            // Counter
-            const counter = document.createElement('div');
-            counter.className = 'image-counter';
-            counter.textContent = `${galeriaIdx + 1} / ${galeriaImgs.length}`;
-            galeria.appendChild(counter);
+            preloadImg.src = imgUrl;
         } else {
             galeria.innerHTML = '<p style="color: var(--color-gray-400);">Nenhuma imagem disponível.</p>';
         }

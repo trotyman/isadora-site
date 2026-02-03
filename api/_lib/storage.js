@@ -37,6 +37,8 @@ function isAllowedType(mimeType) {
   return mimeType in ALLOWED_TYPES;
 }
 
+// Armazena imagem ORIGINAL (sem watermark)
+// A watermark é aplicada em tempo real via /api/image/[...path]
 async function uploadFile(projectId, filename, buffer, mimeType) {
   const key = `projects/${projectId}/${Date.now()}-${filename}`;
 
@@ -49,7 +51,7 @@ async function uploadFile(projectId, filename, buffer, mimeType) {
 
   await s3Client.send(command);
 
-  // Retorna a URL pública do arquivo
+  // Retorna a URL pública do arquivo (direto do R2 - sem watermark)
   const url = R2_PUBLIC_URL
     ? `${R2_PUBLIC_URL}/${key}`
     : `https://${R2_BUCKET_NAME}.${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
@@ -59,7 +61,7 @@ async function uploadFile(projectId, filename, buffer, mimeType) {
     url,
     filename,
     mimeType,
-    size: buffer.length,
+    size: finalBuffer.length,
     type: getFileType(mimeType)
   };
 }

@@ -3,6 +3,18 @@
  * Projetos Page JavaScript
  */
 
+// ===== Watermark URL Helper =====
+const R2_PUBLIC_BASE = 'https://pub-c223da626df34d90984474e07d938a70.r2.dev';
+
+function getWatermarkedUrl(originalUrl) {
+    if (!originalUrl) return '';
+    if (originalUrl.includes(R2_PUBLIC_BASE)) {
+        const path = originalUrl.replace(R2_PUBLIC_BASE + '/', '');
+        return `/api/image/${path}`;
+    }
+    return originalUrl;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     
     // ===== Header Scroll Effect =====
@@ -133,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 projetos.forEach((proj, idx) => {
                     const category = proj.category || 'residencial';
                     const images = getProjectImages(proj);
-                    const coverUrl = images[0] || '';
+                    const coverUrl = getWatermarkedUrl(images[0] || '');
                     const description = proj.description || generateDescription(proj.title, category);
                     
                     const item = document.createElement('article');
@@ -146,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     item.innerHTML = `
                         <div class="projeto-image-wrapper ${!coverUrl ? 'no-image' : ''}">
-                            ${coverUrl ? `<img src="${coverUrl}" alt="${proj.title}" class="projeto-image" onerror="this.parentElement.classList.add('no-image');this.remove();">` : ''}
+                            ${coverUrl ? `<div class="projeto-image" style="background-image: url('${coverUrl}')" data-src="${coverUrl}"></div><div class="image-protection-layer"></div>` : ''}
                         </div>
                         <div class="projeto-info">
                             <span class="projeto-category">${getCategoryLabel(category)}</span>
@@ -286,22 +298,49 @@ document.addEventListener('DOMContentLoaded', function() {
         galeria.innerHTML = '';
         
         if (galeriaImgs.length > 0) {
+            // URL com watermark para exibição pública
+            const imgUrl = getWatermarkedUrl(galeriaImgs[galeriaIdx]);
+            
             // Spinner
             const spinner = document.createElement('div');
             spinner.className = 'spinner';
             spinner.style.margin = '100px auto';
             galeria.appendChild(spinner);
             
-            // Image
-            const img = document.createElement('img');
-            img.src = galeriaImgs[galeriaIdx];
-            img.alt = '';
-            img.style.display = 'none';
-            img.draggable = false;
-            
-            img.onload = function() {
+            // Preload image to check if it loads
+            const preloadImg = new Image();
+            preloadImg.onload = function() {
                 spinner.remove();
-                img.style.display = 'block';
+                
+                // Create protected image container
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'modal-image-protected';
+                imgContainer.style.backgroundImage = `url('${imgUrl}')`;
+                imgContainer.setAttribute('data-src', imgUrl);
+                
+                // Protection layer
+                const protectionLayer = document.createElement('div');
+                protectionLayer.className = 'image-protection-layer';
+                imgContainer.appendChild(protectionLayer);
+                
+                // Watermark overlay (backup visual, a real já está na imagem)
+                const watermark = document.createElement('div');
+                watermark.className = 'watermark-overlay';
+                watermark.innerHTML = '<img src="/assets/logo-completa.svg" alt="" class="watermark-logo" draggable="false">';
+                imgContainer.appendChild(watermark);
+                
+                // Watermark pattern
+                const pattern = document.createElement('div');
+                pattern.className = 'watermark-pattern';
+                imgContainer.appendChild(pattern);
+                
+                galeria.appendChild(imgContainer);
+                
+                // Counter
+                const counter = document.createElement('div');
+                counter.className = 'image-counter';
+                counter.textContent = `${galeriaIdx + 1} / ${galeriaImgs.length}`;
+                galeria.appendChild(counter);
                 
                 // Aplica proteção após carregar
                 if (window.ImageProtection) {
@@ -309,18 +348,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             };
             
-            img.onerror = function() {
+            preloadImg.onerror = function() {
                 spinner.remove();
                 galeria.innerHTML = '<p style="color: var(--color-gray-400);">Erro ao carregar imagem.</p>';
             };
             
-            galeria.appendChild(img);
-            
-            // Counter
-            const counter = document.createElement('div');
-            counter.className = 'image-counter';
-            counter.textContent = `${galeriaIdx + 1} / ${galeriaImgs.length}`;
-            galeria.appendChild(counter);
+            preloadImg.src = imgUrl;
         } else {
             galeria.innerHTML = '<p style="color: var(--color-gray-400);">Nenhuma imagem disponível.</p>';
         }

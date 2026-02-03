@@ -571,7 +571,7 @@ p:last-child {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: calc(80px + var(--space-sm)) var(--space-lg) var(--space-xl);
+    padding: calc(80px + 6rem) var(--space-lg) var(--space-xl);
     position: relative;
     z-index: 1;
 }
@@ -589,6 +589,12 @@ p:last-child {
 @media (min-width: 1024px) {
     .hero-content {
         grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 1440px) {
+    .hero {
+        padding: calc(80px + var(--space-sm)) var(--space-lg) var(--space-xl);
     }
 }
 
@@ -996,12 +1002,19 @@ p:last-child {
     flex: 0 0 280px;
     height: 200px;
     background: var(--color-gray-100);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.portfolio-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+/* Portfolio card image as background div (protected) */
+.portfolio-card-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     transition: var(--transition-slow);
     pointer-events: none;
     -webkit-user-drag: none;
@@ -1011,14 +1024,16 @@ p:last-child {
     user-drag: none;
 }
 
-.portfolio-card {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+/* Protection layer */
+.portfolio-card > .image-protection-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    cursor: pointer;
+    background: transparent;
 }
 
-.portfolio-card:hover img {
+.portfolio-card:hover .portfolio-card-image {
     transform: scale(1.08);
 }
 
@@ -1425,6 +1440,25 @@ p:last-child {
     user-drag: none;
 }
 
+/* Modal protected image (using background-image) */
+.modal-image-protected {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 16/10;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--color-dark);
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* Watermark overlay */
 .watermark-overlay {
     position: absolute;
@@ -1471,6 +1505,21 @@ p:last-child {
     inset: 0;
     z-index: 11;
     cursor: default;
+    /* Adiciona uma imagem transparente de 1x1 pixel para bloquear salvar imagem */
+    background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+    background-repeat: repeat;
+}
+
+/* Disable all pointer events on actual images */
+.modal-gallery img:not(.watermark-logo),
+.projeto-image-wrapper img,
+.portfolio-card img {
+    pointer-events: none !important;
+    -webkit-user-drag: none !important;
+    -khtml-user-drag: none !important;
+    -moz-user-drag: none !important;
+    -o-user-drag: none !important;
+    user-drag: none !important;
 }
 
 .modal-gallery .image-counter {
